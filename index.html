@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UTT Nodo Morón – Alimentos Agroecológicos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+
+  <style>
+    body { font-family: 'Outfit', sans-serif; }
+    .serif { font-family: 'Playfair Display', serif; }
+    .bg-organico { background-color: #fdfaf5; }
+    .modal-active { overflow: hidden; } /* Bloquea scroll solo cuando el modal está abierto */
+    
+    /* Animación suave para la barra de envío */
+    #delivery-bar { transition: all 0.3s ease; }
+    .category-card:hover { transform: translateY(-4px); }
+  </style>
+</head>
+<body class="bg-organico">
+
+  <div id="delivery-bar" class="bg-emerald-800 text-white py-2 px-4 text-center text-sm font-medium sticky top-0 z-[60]">
+    <span id="delivery-text">🛒 Para ver costos de envío exactos:</span>
+    <button onclick="openModal()" class="ml-2 underline hover:text-emerald-200">Configurar entrega</button>
+  </div>
+
+  <header class="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-[36px] z-50">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="bg-emerald-600 p-1.5 rounded-lg text-white">
+          <i data-lucide="leaf" class="w-5 h-5"></i>
+        </div>
+        <h1 class="serif text-xl text-stone-800">UTT <span class="text-emerald-700">Nodo Morón</span></h1>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="relative p-2 text-stone-600">
+          <i data-lucide="shopping-basket"></i>
+          <span class="absolute top-0 right-0 bg-orange-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-8">
+    <div class="mb-10">
+      <h2 class="serif text-3xl text-stone-800 mb-2">Productos de la Tierra</h2>
+      <p class="text-stone-500 italic">Directo del productor a tu mesa, sin intermediarios.</p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+      <div class="category-card bg-emerald-100 p-6 rounded-2xl text-center cursor-pointer transition-all border border-emerald-200">
+        <i data-lucide="carrot" class="mx-auto mb-2 text-emerald-700"></i>
+        <span class="font-semibold text-emerald-900">Verduras</span>
+      </div>
+      <div class="category-card bg-orange-100 p-6 rounded-2xl text-center cursor-pointer transition-all border border-orange-200">
+        <i data-lucide="package" class="mx-auto mb-2 text-orange-700"></i>
+        <span class="font-semibold text-orange-900">Bolsones</span>
+      </div>
+      </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="bg-white p-4 rounded-2xl border border-stone-100 shadow-sm">
+        <div class="aspect-square bg-stone-100 rounded-xl mb-4 overflow-hidden relative">
+            <span class="absolute top-2 left-2 bg-emerald-600 text-white text-[10px] px-2 py-1 rounded font-bold uppercase tracking-wider">Agroecológico</span>
+        </div>
+        <h3 class="font-bold text-stone-800 mb-1 text-lg">Bolsón de Verdura Estacional</h3>
+        <p class="text-stone-500 text-sm mb-4">5kg de verdura fresca de la quinta de La Plata.</p>
+        <div class="flex items-center justify-between">
+          <span class="text-emerald-700 font-bold text-xl">$8.500</span>
+          <button onclick="handleAddToCart('Bolsón de Verdura')" class="bg-stone-800 text-white px-4 py-2 rounded-lg text-sm hover:bg-emerald-700 transition-colors">Agregar</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="delivery-modal" class="fixed inset-0 bg-stone-900/40 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-8 transform transition-all translate-y-0">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="serif text-2xl text-stone-800">¿Cómo recibís tu pedido?</h3>
+        <button onclick="closeModal()" class="text-stone-400 hover:text-stone-600">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="flex gap-4 mb-8">
+        <button id="btn-retiro" onclick="setMode('retiro')" class="flex-1 py-3 border-2 border-stone-200 rounded-xl font-semibold text-stone-600 hover:border-emerald-600 transition-all">Retiro en Nodo</button>
+        <button id="btn-envio" onclick="setMode('envio')" class="flex-1 py-3 border-2 border-stone-200 rounded-xl font-semibold text-stone-600 hover:border-emerald-600 transition-all">Envío a Casa</button>
+      </div>
+
+      <div id="form-envio" class="hidden space-y-4">
+        <div>
+          <label class="text-[10px] uppercase font-bold text-stone-400 tracking-widest">Localidad (Zona Morón)</label>
+          <select id="localidad" class="w-full border-b-2 border-stone-100 py-2 outline-none focus:border-emerald-500 transition-colors">
+            <option value="Morón Centro">Morón Centro</option>
+            <option value="Castelar">Castelar</option>
+            <option value="Haedo">Haedo</option>
+            <option value="Ituzaingó">Ituzaingó (Cercanía)</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="col-span-2">
+            <label class="text-[10px] uppercase font-bold text-stone-400 tracking-widest">Calle</label>
+            <input type="text" id="calle" class="w-full border-b-2 border-stone-100 py-2 outline-none focus:border-emerald-500" placeholder="Ej: Agüero">
+          </div>
+          <div>
+            <label class="text-[10px] uppercase font-bold text-stone-400 tracking-widest">Altura</label>
+            <input type="text" id="altura" class="w-full border-b-2 border-stone-100 py-2 outline-none focus:border-emerald-500" placeholder="1234">
+          </div>
+        </div>
+      </div>
+
+      <button onclick="saveDelivery()" class="w-full bg-emerald-700 text-white py-4 rounded-xl font-bold mt-6 hover:bg-emerald-800 shadow-lg shadow-emerald-700/20">Confirmar Datos</button>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Lógica del Modal
+    function openModal() {
+      const modal = document.getElementById('delivery-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.classList.add('modal-active');
+    }
+
+    function closeModal() {
+      document.getElementById('delivery-modal').classList.add('hidden');
+      document.getElementById('delivery-modal').classList.remove('flex');
+      document.body.classList.remove('modal-active');
+    }
+
+    function setMode(mode) {
+      const form = document.getElementById('form-envio');
+      const btnEnvio = document.getElementById('btn-envio');
+      const btnRetiro = document.getElementById('btn-retiro');
+
+      if (mode === 'envio') {
+        form.classList.remove('hidden');
+        btnEnvio.classList.add('border-emerald-600', 'text-emerald-700', 'bg-emerald-50');
+        btnRetiro.classList.remove('border-emerald-600', 'text-emerald-700', 'bg-emerald-50');
+      } else {
+        form.classList.add('hidden');
+        btnRetiro.classList.add('border-emerald-600', 'text-emerald-700', 'bg-emerald-50');
+        btnEnvio.classList.remove('border-emerald-600', 'text-emerald-700', 'bg-emerald-50');
+      }
+    }
+
+    function saveDelivery() {
+      const localidad = document.getElementById('localidad').value;
+      const calle = document.getElementById('calle').value;
+      const altura = document.getElementById('altura').value;
+      const text = calle ? `Envío a: ${calle} ${altura}, ${localidad}` : `Retiro por: Nodo Morón`;
+      
+      document.getElementById('delivery-text').innerText = `✅ ${text}`;
+      document.getElementById('delivery-bar').classList.replace('bg-emerald-800', 'bg-stone-800');
+      closeModal();
+    }
+
+    function handleAddToCart(product) {
+        // Si no han configurado la entrega, abrimos el modal antes de dejar sumar al carrito
+        if (document.getElementById('delivery-text').innerText.includes('Ver costos')) {
+            openModal();
+        } else {
+            alert(product + ' agregado al carrito!');
+        }
+    }
+  </script>
+</body>
+</html>
