@@ -554,88 +554,126 @@
      NAVBAR
 ══════════════════════════════════════════ -->
 <header class="sticky top-0 z-50 border-b" style="background:rgba(253,248,241,.95);border-color:#e8d9c4;backdrop-filter:blur(12px);">
-  <div class="max-w-6xl mx-auto px-4 flex items-center justify-between h-16 gap-3">
+  <div class="max-w-6xl mx-auto px-4 flex items-center h-16 gap-3">
 
     <!-- Logo -->
     <a href="#" class="flex items-center gap-2.5 flex-shrink-0">
-      <div class="w-9 h-9 rounded-full flex items-center justify-center" style="background:#2d5a27;">
-        <i data-lucide="sprout" class="w-5 h-5 text-white"></i>
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#2d5a27;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22V7"/>
+          <path d="M12 7C12 7 7 5 5 2c5 0 7 2.5 7 5z" fill="rgba(255,255,255,.25)"/>
+          <path d="M12 13C12 13 16 11 18 9c-4 0-6 2-6 4z" fill="rgba(255,255,255,.25)"/>
+        </svg>
       </div>
-      <div class="leading-tight hidden sm:block">
-        <p class="serif font-semibold text-base" style="color:#2e1f0e;">UTT Nodo</p>
-        <p class="text-xs font-light tracking-wide" style="color:#7a5c2e;">Morón</p>
-      </div>
+      <span style="font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:#2e1f0e;letter-spacing:-0.02em;white-space:nowrap;">UTT Nodo Morón</span>
     </a>
 
-    <!-- Menú categorías (desplegable) -->
-    <div class="relative" id="cat-menu-wrapper">
-      <button id="cat-menu-btn" onclick="toggleCatMenu()"
-        class="flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-medium border transition-all"
-        style="background:#f5ede0;border-color:#e8d9c4;color:#2e1f0e;">
-        <i data-lucide="layout-grid" class="w-4 h-4" style="color:#2d5a27;"></i>
-        <span id="cat-menu-label">Categorías</span>
-        <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform" id="cat-chevron" style="color:#7a5c2e;"></i>
-      </button>
+    <!-- Spacer -->
+    <div class="flex-1"></div>
 
-      <!-- Dropdown panel -->
-      <div id="cat-dropdown"
-        class="absolute left-0 top-full mt-2 rounded-2xl shadow-xl border py-2 z-50 min-w-[220px]"
-        style="background:#fffcf6;border-color:#e8d9c4;">
-        <div class="dd-item active" onclick="selectCatFromMenu('todos','Todos',this)">
-          <span>🌿</span><span>Todos los productos</span>
-        </div>
-        <div class="h-px mx-3 my-1" style="background:#e8d9c4;"></div>
-        <div class="dd-item" onclick="selectCatFromMenu('verduras','🥬 Verduras',this)">
-          <span>🥬</span><span>Verduras</span>
-        </div>
-        <div class="dd-item" onclick="selectCatFromMenu('frutas','🍎 Frutas',this)">
-          <span>🍎</span><span>Frutas</span>
-        </div>
-        <div class="dd-item" onclick="selectCatFromMenu('huevos','🥚 Huevos/Hongos',this)">
-          <span>🥚</span><span>Huevos / Hongos</span>
-        </div>
-        <div class="dd-item" onclick="selectCatFromMenu('almacen','🫙 Almacén',this)">
-          <span>🫙</span><span>Productos de Almacén</span>
-        </div>
-        <div class="dd-item" onclick="selectCatFromMenu('mieles','🍯 Mieles',this)">
-          <span>🍯</span><span>Mieles</span>
-        </div>
-        <div class="dd-item" onclick="selectCatFromMenu('frescos','🧀 Frescos',this)">
-          <span>🧀</span><span>Frescos</span>
-        </div>
-        <div class="dd-item" onclick="selectCatFromMenu('granos','🌾 Granos',this)">
-          <span>🌾</span><span>Granos, Legumbres y Semillas</span>
-        </div>
-        <div class="dd-item" onclick="selectCatFromMenu('artesanal','🧴 Artesanal',this)">
-          <span>🧴</span><span>Producción Artesanal</span>
+    <!-- Desktop: Categorías + Delivery + FAQ -->
+    <div class="hidden md:flex items-center gap-2">
+
+      <!-- Menú categorías -->
+      <div class="relative" id="cat-menu-wrapper">
+        <button id="cat-menu-btn" onclick="toggleCatMenu()"
+          class="flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-medium border transition-all"
+          style="background:#f5ede0;border-color:#e8d9c4;color:#2e1f0e;">
+          <i data-lucide="layout-grid" class="w-4 h-4" style="color:#2d5a27;"></i>
+          <span id="cat-menu-label">Categorías</span>
+          <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform" id="cat-chevron" style="color:#7a5c2e;"></i>
+        </button>
+        <div id="cat-dropdown"
+          class="absolute left-0 top-full mt-2 rounded-2xl shadow-xl border py-2 z-50 min-w-[220px]"
+          style="background:#fffcf6;border-color:#e8d9c4;">
+          <div class="dd-item active" onclick="selectCatFromMenu('todos','Todos',this)"><span>🌿</span><span>Todos los productos</span></div>
+          <div class="h-px mx-3 my-1" style="background:#e8d9c4;"></div>
+          <div class="dd-item" onclick="selectCatFromMenu('verduras','🥬 Verduras',this)"><span>🥬</span><span>Verduras</span></div>
+          <div class="dd-item" onclick="selectCatFromMenu('frutas','🍎 Frutas',this)"><span>🍎</span><span>Frutas</span></div>
+          <div class="dd-item" onclick="selectCatFromMenu('huevos','🥚 Huevos/Hongos',this)"><span>🥚</span><span>Huevos / Hongos</span></div>
+          <div class="dd-item" onclick="selectCatFromMenu('almacen','🫙 Almacén',this)"><span>🫙</span><span>Productos de Almacén</span></div>
+          <div class="dd-item" onclick="selectCatFromMenu('mieles','🍯 Mieles',this)"><span>🍯</span><span>Mieles</span></div>
+          <div class="dd-item" onclick="selectCatFromMenu('frescos','🧀 Frescos',this)"><span>🧀</span><span>Frescos</span></div>
+          <div class="dd-item" onclick="selectCatFromMenu('granos','🌾 Granos',this)"><span>🌾</span><span>Granos, Legumbres y Semillas</span></div>
+          <div class="dd-item" onclick="selectCatFromMenu('artesanal','🧴 Artesanal',this)"><span>🧴</span><span>Producción Artesanal</span></div>
         </div>
       </div>
-    </div>
 
-    <!-- Botón de entrega -->
-    <button id="delivery-pill" onclick="reabrirModal()"
-      class="flex items-center gap-1.5 cursor-pointer rounded-full px-3 py-1.5 text-xs font-medium border transition-all hover:border-verde flex-1 max-w-[180px] min-w-0"
-      style="background:#f5ede0;border-color:#e8d9c4;color:#7a5c2e;">
-      <i data-lucide="map-pin" class="w-3.5 h-3.5 flex-shrink-0" style="color:#7a5c2e;"></i>
-      <span id="delivery-pill-text" class="truncate hidden xs:block sm:block">¿Dónde te entregamos?</span>
-      <i data-lucide="chevron-down" class="w-3 h-3 flex-shrink-0"></i>
-    </button>
+      <!-- Delivery pill -->
+      <button id="delivery-pill" onclick="reabrirModal()"
+        class="flex items-center gap-1.5 cursor-pointer rounded-full px-3 py-1.5 text-xs font-medium border transition-all hover:border-verde"
+        style="background:#f5ede0;border-color:#e8d9c4;color:#7a5c2e;max-width:200px;">
+        <i data-lucide="map-pin" class="w-3.5 h-3.5 flex-shrink-0" style="color:#7a5c2e;"></i>
+        <span id="delivery-pill-text" class="truncate">¿Dónde te entregamos?</span>
+        <i data-lucide="chevron-down" class="w-3 h-3 flex-shrink-0"></i>
+      </button>
 
-    <!-- Acciones -->
-    <div class="flex items-center gap-2 flex-shrink-0">
-      <!-- Botón FAQ -->
-      <a href="#faq"
-        class="hidden sm:flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium border transition-all hover:border-verde"
-        style="background:#f5ede0;border-color:#e8d9c4;color:#2e1f0e;">
+      <!-- FAQ -->
+      <a href="#faq" class="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium border transition-all hover:border-verde"
+        style="background:#f5ede0;border-color:#e8d9c4;color:#2e1f0e;white-space:nowrap;">
         <i data-lucide="circle-help" class="w-4 h-4" style="color:#2d5a27;"></i>
         Preguntas frecuentes
       </a>
-      <button onclick="toggleCart()" class="relative p-2 rounded-full transition-colors hover:bg-tierra-2">
-        <i data-lucide="shopping-basket" class="w-5 h-5" style="color:#2e1f0e;"></i>
-        <span id="cart-count-badge" class="absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center hidden"
-              style="background:#2d5a27;color:#fdf8f1;">0</span>
-      </button>
     </div>
+
+    <!-- Carrito (siempre visible) -->
+    <button onclick="toggleCart()" class="relative p-2 rounded-full transition-colors hover:bg-tierra-2 flex-shrink-0" style="min-width:40px;min-height:40px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2e1f0e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      <span id="cart-count-badge" class="absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center hidden"
+            style="background:#2d5a27;color:#fdf8f1;">0</span>
+    </button>
+
+    <!-- Mobile: botón hamburguesa -->
+    <button id="mob-menu-btn" onclick="toggleMobMenu()" class="md:hidden p-2 rounded-full transition-colors hover:bg-tierra-2 flex-shrink-0">
+      <i data-lucide="menu" class="w-5 h-5" style="color:#2e1f0e;"></i>
+    </button>
+
+  </div>
+
+  <!-- Mobile menu panel -->
+  <div id="mob-menu" class="hidden md:hidden border-t px-4 py-3 space-y-2" style="background:rgba(253,248,241,.98);border-color:#e8d9c4;">
+
+    <!-- Categorías en mobile (acordeón simple) -->
+    <div>
+      <button onclick="toggleMobCats()" class="w-full flex items-center justify-between py-2 text-sm font-medium" style="color:#2e1f0e;">
+        <span class="flex items-center gap-2">
+          <i data-lucide="layout-grid" class="w-4 h-4" style="color:#2d5a27;"></i>
+          Categorías
+        </span>
+        <i data-lucide="chevron-down" class="w-4 h-4" id="mob-cats-chevron" style="color:#7a5c2e;transition:transform .2s;"></i>
+      </button>
+      <div id="mob-cats" class="hidden grid grid-cols-2 gap-1 pb-2 pt-1">
+        <button class="text-left text-sm py-2 px-3 rounded-xl" style="background:#f5ede0;color:#2e1f0e;" onclick="selectCatMobile('todos')">🌿 Todos</button>
+        <button class="text-left text-sm py-2 px-3 rounded-xl" style="background:#f5ede0;color:#2e1f0e;" onclick="selectCatMobile('verduras')">🥬 Verduras</button>
+        <button class="text-left text-sm py-2 px-3 rounded-xl" style="background:#f5ede0;color:#2e1f0e;" onclick="selectCatMobile('frutas')">🍎 Frutas</button>
+        <button class="text-left text-sm py-2 px-3 rounded-xl" style="background:#f5ede0;color:#2e1f0e;" onclick="selectCatMobile('huevos')">🥚 Huevos/Hongos</button>
+        <button class="text-left text-sm py-2 px-3 rounded-xl" style="background:#f5ede0;color:#2e1f0e;" onclick="selectCatMobile('almacen')">🫙 Almacén</button>
+        <button class="text-left text-sm py-2 px-3 rounded-xl" style="background:#f5ede0;color:#2e1f0e;" onclick="selectCatMobile('mieles')">🍯 Mieles</button>
+        <button class="text-left text-sm py-2 px-3 rounded-xl" style="background:#f5ede0;color:#2e1f0e;" onclick="selectCatMobile('frescos')">🧀 Frescos</button>
+        <button class="text-left text-sm py-2 px-3 rounded-xl" style="background:#f5ede0;color:#2e1f0e;" onclick="selectCatMobile('granos')">🌾 Granos</button>
+        <button class="text-left text-sm py-2 px-3 rounded-xl col-span-2" style="background:#f5ede0;color:#2e1f0e;" onclick="selectCatMobile('artesanal')">🧴 Producción Artesanal</button>
+      </div>
+    </div>
+
+    <div class="h-px" style="background:#e8d9c4;"></div>
+
+    <!-- Delivery -->
+    <button onclick="reabrirModal();toggleMobMenu()" class="w-full flex items-center gap-2 py-2 text-sm" style="color:#2e1f0e;">
+      <i data-lucide="map-pin" class="w-4 h-4" style="color:#2d5a27;"></i>
+      <span id="mob-delivery-text">¿Dónde te entregamos?</span>
+    </button>
+
+    <div class="h-px" style="background:#e8d9c4;"></div>
+
+    <!-- FAQ -->
+    <a href="#faq" onclick="toggleMobMenu()" class="flex items-center gap-2 py-2 text-sm" style="color:#2e1f0e;">
+      <i data-lucide="circle-help" class="w-4 h-4" style="color:#2d5a27;"></i>
+      Preguntas frecuentes
+    </a>
 
   </div>
 </header>
@@ -985,7 +1023,7 @@
           </div>
           <div class="flex items-center gap-2">
             <i data-lucide="mail" class="w-4 h-4"></i>
-            <a href="mailto:uttnodomoron@gmail.com" class="hover:text-white transition-colors">uttnodomoron@gmail.com</a>
+            <a href="/cdn-cgi/l/email-protection#9beeefeff5f4fff4f6f4e9f4f5dbfcf6faf2f7b5f8f4f6" class="hover:text-white transition-colors"><span class="__cf_email__" data-cfemail="611415150f0e050e0c0e130e0f21060c00080d4f020e0c">[email&#160;protected]</span></a>
           </div>
         </div>
       </div>
@@ -1280,7 +1318,7 @@
 <!-- ══════════════════════════════════════════
      JAVASCRIPT
 ══════════════════════════════════════════ -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ─── DATOS ───────────────────────────────────
 const PRODUCTOS = [
   {
@@ -1493,6 +1531,7 @@ function actualizarUIEntrega() {
   if (cartTx) cartTx.textContent = texto || 'Sin entrega seleccionada';
   if (banner) banner.classList.toggle('hidden', !delivMode);
   actualizarCarritoUI();
+  actualizarMobDelivery();
 }
 
 // ─── PRODUCTOS ───────────────────────────────
@@ -1874,6 +1913,56 @@ function cerrarSuccess() {
 }
 
 
+// ─── MENÚ MOBILE ─────────────────────
+function toggleMobMenu() {
+  const menu = document.getElementById('mob-menu');
+  const btn  = document.getElementById('mob-menu-btn');
+  const open = !menu.classList.contains('hidden');
+  menu.classList.toggle('hidden', open);
+  btn.innerHTML = open
+    ? '<i data-lucide="menu" class="w-5 h-5" style="color:#2e1f0e;"></i>'
+    : '<i data-lucide="x" class="w-5 h-5" style="color:#2e1f0e;"></i>';
+  lucide.createIcons();
+}
+
+function toggleMobCats() {
+  const panel   = document.getElementById('mob-cats');
+  const chevron = document.getElementById('mob-cats-chevron');
+  const open    = !panel.classList.contains('hidden');
+  panel.classList.toggle('hidden', open);
+  chevron.style.transform = open ? '' : 'rotate(180deg)';
+}
+
+function selectCatMobile(cat) {
+  catActiva = cat;
+  terminoBusqueda = '';
+  const input    = document.getElementById('search-input');
+  const clearBtn = document.getElementById('search-clear');
+  if (input)    input.value = '';
+  if (clearBtn) clearBtn.classList.add('hidden');
+  document.querySelectorAll('.cat-pill').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + cat + "'"));
+  });
+  document.querySelectorAll('#cat-dropdown .dd-item').forEach(i => {
+    i.classList.toggle('active', i.getAttribute('onclick') && i.getAttribute('onclick').includes("'" + cat + "'"));
+  });
+  renderProducts(cat);
+  toggleMobMenu();
+  document.getElementById('productos').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function actualizarMobDelivery() {
+  const el = document.getElementById('mob-delivery-text');
+  if (!el) return;
+  if (delivMode === 'retiro') {
+    el.textContent = 'Retiro por nodo';
+  } else if (delivMode === 'envio' && delivData.localidad) {
+    el.textContent = delivData.localidad + ' — ' + delivData.calle + ' ' + delivData.numero;
+  } else {
+    el.textContent = '¿Dónde te entregamos?';
+  }
+}
+
 // ─── MENÚ CATEGORÍAS NAVBAR ──────────
 let catMenuOpen = false;
 
@@ -1941,15 +2030,4 @@ const observer = new IntersectionObserver(entries => {
       e.target.style.transform = 'translateY(0)';
     }
   });
-}, { threshold: 0.08 });
-
-document.querySelectorAll('.fade-up').forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(22px)';
-  el.style.transition = 'opacity .55s ease, transform .55s ease';
-  observer.observe(el);
-});
-
-</script>
-</body>
-</html>
+}, { threshold: 0.08 
