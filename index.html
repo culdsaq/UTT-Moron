@@ -3,179 +3,1953 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UTT Nodo Morón – Alimentos Agroecológicos</title>
+  <title>UTT Nodo Morón — Del Campo a tu Mesa</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
-
-  <style>
-    body { font-family: 'Outfit', sans-serif; background-color: #fdfaf5; scroll-behavior: smooth; }
-    .serif { font-family: 'Playfair Display', serif; }
-    
-    /* Previene el bloqueo de scroll accidental */
-    .no-scroll { overflow: hidden; }
-    
-    /* Animaciones suaves */
-    .fade-in { animation: fadeIn 0.4s ease-out forwards; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    #delivery-bar { transition: background-color 0.3s ease; }
-  </style>
-</head>
-<body class="text-stone-800">
-
-  <div id="delivery-bar" class="bg-emerald-900 text-white py-2.5 px-4 text-center text-sm font-medium sticky top-0 z-[60] shadow-md">
-    <div class="max-w-6xl mx-auto flex items-center justify-center gap-2">
-      <i data-lucide="truck" class="w-4 h-4 text-emerald-300"></i>
-      <span id="delivery-status">Entregas en Morón, Haedo y Castelar</span>
-      <button onclick="openDeliveryModal()" class="ml-2 bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full text-[11px] uppercase tracking-wider transition-all">Configurar</button>
-    </div>
-  </div>
-
-  <header class="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-[40px] z-50">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <div class="bg-emerald-600 p-1.5 rounded-lg text-white">
-          <i data-lucide="leaf" class="w-5 h-5"></i>
-        </div>
-        <h1 class="serif text-xl font-bold">UTT <span class="text-emerald-700 underline decoration-emerald-200">Nodo Morón</span></h1>
-      </div>
-      <div class="flex items-center gap-4">
-        <button class="relative p-2 text-stone-600 hover:text-emerald-600 transition-colors">
-          <i data-lucide="shopping-basket"></i>
-          <span id="cart-count" class="absolute -top-1 -right-1 bg-orange-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-6xl mx-auto px-4 py-8">
-    <div class="mb-12 text-center md:text-left">
-      <h2 class="serif text-4xl md:text-5xl text-stone-900 mb-4">Soberanía alimentaria <br class="hidden md:block"> en tu mesa.</h2>
-      <p class="text-stone-500 text-lg max-w-2xl">Productos frescos de la tierra, sin agrotóxicos y a precio justo.</p>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div class="bg-white rounded-3xl border border-stone-200 overflow-hidden hover:shadow-xl hover:shadow-emerald-900/5 transition-all group">
-        <div class="aspect-video bg-stone-100 relative overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-          <span class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-emerald-800 shadow-sm uppercase tracking-tighter">Más vendido</span>
-        </div>
-        <div class="p-6">
-          <h3 class="font-bold text-xl mb-1 text-stone-800">Bolsón de Estación (5kg)</h3>
-          <p class="text-stone-500 text-sm mb-6 leading-relaxed">Variedad de 7 a 9 hortalizas frescas según cosecha del día.</p>
-          <div class="flex items-center justify-between pt-4 border-t border-stone-100">
-            <span class="text-2xl font-bold text-stone-900">$8.500</span>
-            <button onclick="addToCart('Bolsón Estación')" class="bg-emerald-700 hover:bg-emerald-800 text-white px-6 py-3 rounded-2xl font-bold transition-all active:scale-95">Agregar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <div id="delivery-modal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
-    <div class="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl p-8 fade-in">
-      <div class="flex justify-between items-center mb-6">
-        <h3 class="serif text-2xl">Configurar Entrega</h3>
-        <button onclick="closeDeliveryModal()" class="text-stone-400 hover:text-stone-900">
-          <i data-lucide="x-circle"></i>
-        </button>
-      </div>
-
-      <div class="grid grid-cols-2 gap-3 mb-8 bg-stone-100 p-1.5 rounded-2xl">
-        <button id="mode-retiro" onclick="toggleMode('retiro')" class="py-3 rounded-xl font-bold text-sm transition-all bg-white shadow-sm text-emerald-700">Retiro en Nodo</button>
-        <button id="mode-envio" onclick="toggleMode('envio')" class="py-3 rounded-xl font-bold text-sm transition-all text-stone-500">Envío a Domicilio</button>
-      </div>
-
-      <div id="form-envio" class="hidden space-y-5">
-        <div>
-          <label class="text-[11px] font-bold text-stone-400 uppercase tracking-widest block mb-2">Localidad</label>
-          <select id="localidad" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
-            <option>Morón Centro</option>
-            <option>Castelar</option>
-            <option>Haedo</option>
-            <option>Villa Sarmiento</option>
-          </select>
-        </div>
-        <div class="grid grid-cols-4 gap-3">
-          <div class="col-span-3">
-            <label class="text-[11px] font-bold text-stone-400 uppercase tracking-widest block mb-2">Calle</label>
-            <input type="text" id="calle" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 outline-none focus:border-emerald-500" placeholder="Ej: Agüero">
-          </div>
-          <div>
-            <label class="text-[11px] font-bold text-stone-400 uppercase tracking-widest block mb-2">Altura</label>
-            <input type="text" id="altura" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-3 outline-none focus:border-emerald-500" placeholder="123">
-          </div>
-        </div>
-      </div>
-
-      <button onclick="saveDelivery()" class="w-full bg-stone-900 text-white py-4 rounded-2xl font-bold mt-8 hover:bg-emerald-700 transition-all shadow-lg shadow-stone-900/10">Confirmar Datos</button>
-    </div>
-  </div>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
 
   <script>
-    lucide.createIcons();
-    let currentMode = 'retiro';
-    let isDeliveryConfigured = false;
-
-    function openDeliveryModal() {
-      document.getElementById('delivery-modal').classList.remove('hidden');
-      document.getElementById('delivery-modal').classList.add('flex');
-      document.body.classList.add('no-scroll');
-    }
-
-    function closeDeliveryModal() {
-      document.getElementById('delivery-modal').classList.add('hidden');
-      document.getElementById('delivery-modal').classList.remove('flex');
-      document.body.classList.remove('no-scroll');
-    }
-
-    function toggleMode(mode) {
-      currentMode = mode;
-      const form = document.getElementById('form-envio');
-      const bRetiro = document.getElementById('mode-retiro');
-      const bEnvio = document.getElementById('mode-envio');
-
-      if (mode === 'envio') {
-        form.classList.remove('hidden');
-        bEnvio.className = "py-3 rounded-xl font-bold text-sm transition-all bg-white shadow-sm text-emerald-700";
-        bRetiro.className = "py-3 rounded-xl font-bold text-sm transition-all text-stone-500";
-      } else {
-        form.classList.add('hidden');
-        bRetiro.className = "py-3 rounded-xl font-bold text-sm transition-all bg-white shadow-sm text-emerald-700";
-        bEnvio.className = "py-3 rounded-xl font-bold text-sm transition-all text-stone-500";
-      }
-    }
-
-    function saveDelivery() {
-      const bar = document.getElementById('delivery-bar');
-      const status = document.getElementById('delivery-status');
-      
-      if (currentMode === 'envio') {
-        const calle = document.getElementById('calle').value;
-        const localidad = document.getElementById('localidad').value;
-        if (!calle) { alert("Por favor ingresá tu calle"); return; }
-        status.innerText = `Envío a: ${calle}, ${localidad}`;
-      } else {
-        status.innerText = "Retiro por Nodo Morón";
-      }
-
-      isDeliveryConfigured = true;
-      bar.classList.replace('bg-emerald-900', 'bg-stone-800');
-      closeDeliveryModal();
-    }
-
-    function addToCart(product) {
-      if (!isDeliveryConfigured) {
-        openDeliveryModal();
-      } else {
-        const count = document.getElementById('cart-count');
-        count.innerText = parseInt(count.innerText) + 1;
-        // Animación de feedback
-        count.classList.add('scale-125');
-        setTimeout(() => count.classList.remove('scale-125'), 200);
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            tierra:    '#fdf8f1',
+            'tierra-2':'#f5ede0',
+            'tierra-3':'#e8d9c4',
+            verde:     '#2d5a27',
+            'verde-l': '#4a7c43',
+            'verde-xl':'#d6e8d3',
+            barro:     '#7a5c2e',
+            humus:     '#2e1f0e',
+            crema:     '#fffcf6',
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans:  ['"DM Sans"', 'system-ui', 'sans-serif'],
+          },
+        }
       }
     }
   </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: #fdf8f1;
+      color: #2e1f0e;
+      min-height: 100vh;
+    }
+
+    /* ── Textura de papel ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.6;
+    }
+
+    /* ── Tipografía ── */
+    .serif { font-family: "Playfair Display", Georgia, serif; }
+
+    /* ── Modal backdrop ── */
+    #modal-overlay {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: rgba(20, 35, 15, 0.72);
+      transition: opacity 0.3s ease;
+    }
+    #modal-overlay.flex { display: flex !important; }
+
+    /* ── Cart sidebar ── */
+    #cart-sidebar {
+      transition: transform 0.38s cubic-bezier(.4,0,.2,1);
+      transform: translateX(100%);
+    }
+    #cart-sidebar.open { transform: translateX(0); }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(22px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    @keyframes popIn  {
+      0%   { transform:scale(.88); opacity:0; }
+      70%  { transform:scale(1.03); }
+      100% { transform:scale(1); opacity:1; }
+    }
+    @keyframes floatWA {
+      0%,100% { transform:translateY(0) rotate(0deg); }
+      50%      { transform:translateY(-5px) rotate(2deg); }
+    }
+    @keyframes leafSpin {
+      from { transform:rotate(0deg); }
+      to   { transform:rotate(360deg); }
+    }
+    @keyframes badgePop {
+      0%   { transform:scale(0); }
+      60%  { transform:scale(1.3); }
+      100% { transform:scale(1); }
+    }
+
+    .fade-up        { animation: fadeUp .55s ease both; }
+    .fade-in        { animation: fadeIn .4s ease both; }
+    .pop-in         { animation: popIn .45s cubic-bezier(.4,0,.2,1) both; }
+    .float-wa       { animation: floatWA 3s ease-in-out infinite; }
+    .delay-1        { animation-delay: .1s; }
+    .delay-2        { animation-delay: .2s; }
+    .delay-3        { animation-delay: .3s; }
+    .delay-4        { animation-delay: .4s; }
+    .delay-5        { animation-delay: .5s; }
+
+    /* ── Product cards ── */
+    .product-card {
+      transition: transform .22s ease, box-shadow .22s ease;
+      position: relative; overflow: hidden;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 48px rgba(45,90,39,.14);
+    }
+    .product-card .card-badge {
+      transition: transform .2s ease;
+    }
+    .product-card:hover .card-badge { transform: rotate(-3deg) scale(1.05); }
+
+    /* ── Hero diagonal ── */
+    .hero-clip {
+      clip-path: ellipse(100% 88% at 50% 12%);
+    }
+
+    /* ── Organic blob ── */
+    .blob {
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+
+    /* ── Category pills ── */
+    .cat-pill { transition: all .2s ease; cursor: pointer; }
+    .cat-pill:hover, .cat-pill.active {
+      background: #2d5a27;
+      color: #fdf8f1;
+      border-color: #2d5a27;
+    }
+
+    /* ── Btn hover ── */
+    .btn-verde {
+      background: #2d5a27;
+      color: #fdf8f1;
+      transition: background .2s, transform .15s;
+    }
+    .btn-verde:hover { background: #1a3a16; transform: translateY(-1px); }
+    .btn-verde:active { transform: translateY(0); }
+
+    /* ── Navbar dropdown ── */
+    #cat-dropdown {
+      opacity: 0; visibility: hidden; transform: translateY(6px);
+      transition: opacity .2s ease, transform .2s ease, visibility .2s;
+    }
+    #cat-dropdown.open {
+      opacity: 1; visibility: visible; transform: translateY(0);
+    }
+    .dd-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 14px; border-radius: 12px;
+      font-size: .88rem; color: #2e1f0e;
+      cursor: pointer; transition: background .15s;
+      white-space: nowrap;
+    }
+    .dd-item:hover { background: #f5ede0; }
+    .dd-item.active { background: #d6e8d3; color: #1a3a16; font-weight: 500; }
+
+    /* ── FAQ accordion ── */
+    .faq-item { border-bottom: 1px solid #e8d9c4; }
+    .faq-btn {
+      width: 100%; text-align: left;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 0; gap: 12px; cursor: pointer;
+      background: none; border: none;
+      font-family: "DM Sans", sans-serif;
+    }
+    .faq-btn:hover .faq-q { color: #2d5a27; }
+    .faq-q { font-size: .95rem; font-weight: 500; color: #2e1f0e; flex: 1; line-height: 1.4; transition: color .2s; }
+    .faq-icon { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+      border: 1.5px solid #e8d9c4; display: flex; align-items: center; justify-content: center;
+      transition: background .2s, border-color .2s, transform .25s; }
+    .faq-btn[aria-expanded="true"] .faq-icon {
+      background: #2d5a27; border-color: #2d5a27; transform: rotate(45deg); }
+    .faq-btn[aria-expanded="true"] .faq-icon svg { color: white; }
+    .faq-body {
+      overflow: hidden; max-height: 0;
+      transition: max-height .3s cubic-bezier(.4,0,.2,1);
+    }
+    .faq-body.open { max-height: 400px; }
+    .faq-body p { padding-bottom: 18px; font-size: .9rem; color: #7a5c2e; line-height: 1.7; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    #cat-pills::-webkit-scrollbar { display: none; }
+    .cat-pill { white-space: nowrap; flex-shrink: 0; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: #2e1f0e; color: #fdf8f1;
+      padding: 10px 20px; border-radius: 99px;
+      font-size: .85rem; font-weight: 500;
+      z-index: 200; pointer-events: none;
+      opacity: 0; transition: opacity .25s ease, transform .25s ease;
+      white-space: nowrap;
+      display: flex; align-items: center; gap: 8px;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── Sticky categories ── */
+    #sticky-cats {
+      position: sticky; top: 64px; z-index: 30;
+      background: rgba(253,248,241,.97);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid #e8d9c4;
+      transition: box-shadow .2s;
+    }
+    #sticky-cats.scrolled { box-shadow: 0 4px 16px rgba(45,90,39,.08); }
+    ::-webkit-scrollbar-track { background: #f5ede0; }
+    ::-webkit-scrollbar-thumb { background: #2d5a27; border-radius: 9px; }
+
+    /* ── WA btn ── */
+    #wa-btn {
+      box-shadow: 0 8px 30px rgba(37,211,102,.45);
+      transition: box-shadow .2s, transform .2s;
+    }
+    #wa-btn:hover {
+      box-shadow: 0 12px 40px rgba(37,211,102,.6);
+      transform: scale(1.08);
+    }
+
+    /* ── Selección de modo envío en modal ── */
+    .mode-btn {
+      border: 2px solid #e8d9c4;
+      transition: all .2s ease;
+      cursor: pointer;
+    }
+    .mode-btn:hover, .mode-btn.selected {
+      border-color: #2d5a27;
+      background: #d6e8d3;
+    }
+    .mode-btn.selected .mode-icon { color: #2d5a27; }
+
+    /* ── Input fields ── */
+    .field {
+      border: 1.5px solid #e8d9c4;
+      background: #fffcf6;
+      border-radius: 10px;
+      padding: 10px 14px;
+      width: 100%;
+      font-family: "DM Sans", sans-serif;
+      font-size: .95rem;
+      color: #2e1f0e;
+      transition: border-color .2s;
+      outline: none;
+    }
+    .field:focus { border-color: #2d5a27; }
+    .field.error { border-color: #c0392b; }
+
+    /* ── Quantity control ── */
+    .qty-btn {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 700;
+      cursor: pointer;
+      transition: background .15s;
+      border: 1.5px solid #2d5a27;
+      color: #2d5a27;
+    }
+    .qty-btn:hover { background: #2d5a27; color: #fdf8f1; }
+
+    /* ── Nodo map placeholder ── */
+    .map-placeholder {
+      background: linear-gradient(135deg, #d6e8d3 0%, #e8f0e6 100%);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 10px;
+      color: #2d5a27;
+      font-size: .9rem;
+    }
+
+    /* ── Tag "Orgánico" ── */
+    .organic-tag {
+      font-size: .68rem; letter-spacing: .06em; font-weight: 500;
+      background: #d6e8d3; color: #2d5a27;
+      border-radius: 99px; padding: 2px 9px;
+      text-transform: uppercase;
+    }
+
+    /* ── Cart badge ── */
+    #cart-count-badge {
+      animation: none;
+    }
+    #cart-count-badge.bump {
+      animation: badgePop .35s ease both;
+    }
+
+    /* ── Decorative line ── */
+    .deco-line {
+      width: 40px; height: 3px;
+      background: #2d5a27;
+      border-radius: 2px;
+    }
+
+    /* ── Product image placeholder ── */
+    .prod-img {
+      background: linear-gradient(135deg, #e8d9c4 0%, #f5ede0 100%);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .prod-img svg { opacity: .35; }
+    .prod-img::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 50%, rgba(46,31,14,.08) 100%);
+    }
+
+    @media (max-width: 640px) {
+      #cart-sidebar { width: 100% !important; }
+    }
+
+    /* ── Checkout overlay ── */
+    #checkout-overlay {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: rgba(20, 35, 15, 0.75);
+      transition: opacity .3s ease;
+    }
+    @keyframes slideUpCheckout {
+      from { transform: translateY(40px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    #checkout-box {
+      animation: slideUpCheckout .4s cubic-bezier(.4,0,.2,1) both;
+    }
+
+    /* ── Método de pago card ── */
+    .pago-card {
+      border: 2px solid #e8d9c4;
+      border-radius: 16px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all .2s ease;
+      background: #fffcf6;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+    }
+    .pago-card:hover { border-color: #4a7c43; background: #f5fdf4; }
+    .pago-card.selected {
+      border-color: #2d5a27;
+      background: #eef7ec;
+      box-shadow: 0 0 0 3px rgba(45,90,39,.1);
+    }
+    .pago-card .radio-dot {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 2px solid #e8d9c4;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: all .2s;
+    }
+    .pago-card.selected .radio-dot {
+      border-color: #2d5a27;
+      background: #2d5a27;
+    }
+    .pago-card.selected .radio-dot::after {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: white;
+    }
+    .pago-card .pago-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.3rem;
+    }
+
+    /* ── Checkout steps ── */
+    .step-dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .step-dot.done   { background: #2d5a27; color: white; }
+    .step-dot.active { background: #2d5a27; color: white; box-shadow: 0 0 0 4px rgba(45,90,39,.2); }
+    .step-dot.pending{ background: #e8d9c4; color: #7a5c2e; }
+    .step-line { flex: 1; height: 2px; background: #e8d9c4; }
+    .step-line.done { background: #2d5a27; }
+
+    /* ── Info pago detalle ── */
+    #info-transferencia, #info-mercadopago, #info-modo { display: none; }
+    #info-transferencia.visible, #info-mercadopago.visible, #info-modo.visible { display: block; }
+
+    /* ── Confirmación success ── */
+    @keyframes checkPop {
+      0%   { transform: scale(0) rotate(-15deg); }
+      70%  { transform: scale(1.15) rotate(5deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .check-anim { animation: checkPop .5s cubic-bezier(.4,0,.2,1) both; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     MODAL: ¿Cómo querés recibir tu pedido?
+══════════════════════════════════════════ -->
+<div id="modal-overlay" class="fixed inset-0 z-[100] hidden items-end sm:items-center justify-center p-0 sm:p-4" role="dialog" aria-modal="true" onclick="if(event.target===this)cerrarModal()">
+  <div id="modal-box" class="relative w-full sm:max-w-md pop-in sm:rounded-3xl rounded-t-3xl" style="max-height:92vh;overflow-y:auto;">
+    <!-- Decoración orgánica de fondo -->
+    <div class="absolute -top-10 -right-10 w-32 h-32 blob opacity-30"
+         style="background:radial-gradient(circle,#4a7c43,transparent);"></div>
+    <div class="absolute -bottom-8 -left-8 w-24 h-24 blob opacity-20"
+         style="background:radial-gradient(circle,#7a5c2e,transparent);"></div>
+
+    <div class="relative bg-crema sm:rounded-3xl rounded-t-3xl shadow-2xl overflow-hidden">
+      <!-- Header modal -->
+      <div class="px-7 pt-8 pb-5 text-center" style="background:linear-gradient(160deg,#f5ede0,#fffcf6);">
+        <!-- Pill handle para mobile -->
+        <div class="w-10 h-1 rounded-full mx-auto mb-5" style="background:#e8d9c4;"></div>
+        <button onclick="cerrarModal()" class="absolute top-4 right-4 p-1.5 rounded-full" style="background:#f5ede0;">
+          <i data-lucide="x" class="w-4 h-4" style="color:#7a5c2e;"></i>
+        </button>
+        <div class="flex justify-center mb-4">
+          <div class="w-14 h-14 rounded-full flex items-center justify-center" style="background:#d6e8d3;">
+            <i data-lucide="truck" class="w-7 h-7" style="color:#2d5a27;"></i>
+          </div>
+        </div>
+        <p class="organic-tag mb-2">UTT Nodo Morón</p>
+        <h2 class="serif text-2xl font-semibold leading-snug" style="color:#2e1f0e;">
+          ¿Cómo querés<br/>recibir tu pedido?
+        </h2>
+        <p class="text-sm mt-2" style="color:#7a5c2e;">Elegí una opción para continuar</p>
+      </div>
+
+      <!-- Opciones -->
+      <div class="px-7 pb-3 pt-4 space-y-3">
+        <div class="mode-btn rounded-2xl p-4 flex items-start gap-4" onclick="selectMode('retiro')" id="btn-retiro">
+          <div class="mt-0.5 w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#e8d9c4;">
+            <i data-lucide="store" class="w-5 h-5 mode-icon" style="color:#7a5c2e;"></i>
+          </div>
+          <div>
+            <p class="font-medium" style="color:#2e1f0e;">Retiro por Nodo</p>
+            <p class="text-sm mt-0.5" style="color:#7a5c2e;">Pasás a buscar en los puntos de entrega de Morón</p>
+          </div>
+        </div>
+
+        <div class="mode-btn rounded-2xl p-4 flex items-start gap-4" onclick="selectMode('envio')" id="btn-envio">
+          <div class="mt-0.5 w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#d6e8d3;">
+            <i data-lucide="truck" class="w-5 h-5 mode-icon" style="color:#2d5a27;"></i>
+          </div>
+          <div>
+            <p class="font-medium" style="color:#2e1f0e;">Envío a domicilio</p>
+            <p class="text-sm mt-0.5" style="color:#7a5c2e;">Te llevamos hasta tu puerta en las zonas de cobertura</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario envío (oculto inicialmente) -->
+      <div id="form-envio" class="hidden px-7 pb-2 pt-1">
+        <div class="h-px mb-4" style="background:#e8d9c4;"></div>
+        <p class="text-sm font-medium mb-3" style="color:#2e1f0e;">Completá tu dirección de entrega</p>
+        <div class="space-y-3">
+          <div>
+            <label class="text-xs font-medium block mb-1" style="color:#7a5c2e;">Localidad *</label>
+            <select id="sel-localidad" class="field">
+              <option value="">Seleccioná tu localidad</option>
+              <option value="Morón"           data-costo="800">Morón</option>
+              <option value="Haedo"           data-costo="800">Haedo</option>
+              <option value="Villa Sarmiento" data-costo="800">Villa Sarmiento</option>
+              <option value="El Palomar"      data-costo="1000">El Palomar</option>
+              <option value="Castelar"        data-costo="1000">Castelar</option>
+              <option value="Villa Tesei"     data-costo="1000">Villa Tesei</option>
+              <option value="Hurlingham"      data-costo="1200">Hurlingham</option>
+              <option value="Ituzaingó"       data-costo="1200">Ituzaingó</option>
+              <option value="San Justo"       data-costo="1400">San Justo</option>
+              <option value="Villa Luzuriaga" data-costo="1400">Villa Luzuriaga</option>
+            </select>
+            <p id="err-localidad" class="text-xs mt-1 hidden" style="color:#c0392b;">Seleccioná una localidad</p>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <div class="col-span-2">
+              <label class="text-xs font-medium block mb-1" style="color:#7a5c2e;">Calle *</label>
+              <input id="inp-calle" type="text" placeholder="Ej: Av. Rivadavia" class="field" />
+              <p id="err-calle" class="text-xs mt-1 hidden" style="color:#c0392b;">Ingresá la calle</p>
+            </div>
+            <div>
+              <label class="text-xs font-medium block mb-1" style="color:#7a5c2e;">Número *</label>
+              <input id="inp-numero" type="text" placeholder="1234" class="field" />
+              <p id="err-numero" class="text-xs mt-1 hidden" style="color:#c0392b;">Requerido</p>
+            </div>
+          </div>
+          <div>
+            <label class="text-xs font-medium block mb-1" style="color:#7a5c2e;">Piso / Depto (opcional)</label>
+            <input id="inp-piso" type="text" placeholder="Ej: 2B" class="field" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Info retiro (oculto) -->
+      <div id="info-retiro" class="hidden px-7 pb-2 pt-1">
+        <div class="h-px mb-4" style="background:#e8d9c4;"></div>
+        <p class="text-sm font-medium mb-3" style="color:#2e1f0e;">Puntos de retiro disponibles</p>
+        <div class="space-y-2">
+          <div class="rounded-xl p-3 flex gap-3 items-start" style="background:#f5ede0;">
+            <i data-lucide="map-pin" class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#2d5a27;"></i>
+            <div>
+              <p class="text-sm font-medium" style="color:#2e1f0e;">Nodo Central — Morón</p>
+              <p class="text-xs" style="color:#7a5c2e;">Av. Rivadavia 17850 · Mié y Sáb 9–13 hs</p>
+            </div>
+          </div>
+          <div class="rounded-xl p-3 flex gap-3 items-start" style="background:#f5ede0;">
+            <i data-lucide="map-pin" class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#2d5a27;"></i>
+            <div>
+              <p class="text-sm font-medium" style="color:#2e1f0e;">Nodo Castelar</p>
+              <p class="text-xs" style="color:#7a5c2e;">Calle 9 de Julio 230 · Jueves 10–13 hs</p>
+            </div>
+          </div>
+          <div class="rounded-xl p-3 flex gap-3 items-start" style="background:#f5ede0;">
+            <i data-lucide="map-pin" class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#2d5a27;"></i>
+            <div>
+              <p class="text-sm font-medium" style="color:#2e1f0e;">Nodo Haedo</p>
+              <p class="text-xs" style="color:#7a5c2e;">Mitre 580 · Viernes 9–12 hs</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón confirmar -->
+      <div class="px-7 pt-4 pb-7">
+        <button onclick="confirmarModal()"
+          class="btn-verde w-full py-3.5 rounded-2xl font-medium text-base flex items-center justify-center gap-2">
+          <i data-lucide="check-circle" class="w-5 h-5"></i>
+          <span id="btn-modal-text">Confirmar y ver productos</span>
+        </button>
+        <p class="text-center text-xs mt-3" style="color:#7a5c2e;">
+          Podés cambiar esto más adelante desde el carrito
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════ -->
+<header class="sticky top-0 z-50 border-b" style="background:rgba(253,248,241,.95);border-color:#e8d9c4;backdrop-filter:blur(12px);">
+  <div class="max-w-6xl mx-auto px-4 flex items-center justify-between h-16 gap-3">
+
+    <!-- Logo -->
+    <a href="#" class="flex items-center gap-2.5 flex-shrink-0">
+      <div class="w-9 h-9 rounded-full flex items-center justify-center" style="background:#2d5a27;">
+        <i data-lucide="sprout" class="w-5 h-5 text-white"></i>
+      </div>
+      <div class="leading-tight hidden sm:block">
+        <p class="serif font-semibold text-base" style="color:#2e1f0e;">UTT Nodo</p>
+        <p class="text-xs font-light tracking-wide" style="color:#7a5c2e;">Morón</p>
+      </div>
+    </a>
+
+    <!-- Menú categorías (desplegable) -->
+    <div class="relative" id="cat-menu-wrapper">
+      <button id="cat-menu-btn" onclick="toggleCatMenu()"
+        class="flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-medium border transition-all"
+        style="background:#f5ede0;border-color:#e8d9c4;color:#2e1f0e;">
+        <i data-lucide="layout-grid" class="w-4 h-4" style="color:#2d5a27;"></i>
+        <span id="cat-menu-label">Categorías</span>
+        <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform" id="cat-chevron" style="color:#7a5c2e;"></i>
+      </button>
+
+      <!-- Dropdown panel -->
+      <div id="cat-dropdown"
+        class="absolute left-0 top-full mt-2 rounded-2xl shadow-xl border py-2 z-50 min-w-[220px]"
+        style="background:#fffcf6;border-color:#e8d9c4;">
+        <div class="dd-item active" onclick="selectCatFromMenu('todos','Todos',this)">
+          <span>🌿</span><span>Todos los productos</span>
+        </div>
+        <div class="h-px mx-3 my-1" style="background:#e8d9c4;"></div>
+        <div class="dd-item" onclick="selectCatFromMenu('verduras','🥬 Verduras',this)">
+          <span>🥬</span><span>Verduras</span>
+        </div>
+        <div class="dd-item" onclick="selectCatFromMenu('frutas','🍎 Frutas',this)">
+          <span>🍎</span><span>Frutas</span>
+        </div>
+        <div class="dd-item" onclick="selectCatFromMenu('huevos','🥚 Huevos/Hongos',this)">
+          <span>🥚</span><span>Huevos / Hongos</span>
+        </div>
+        <div class="dd-item" onclick="selectCatFromMenu('almacen','🫙 Almacén',this)">
+          <span>🫙</span><span>Productos de Almacén</span>
+        </div>
+        <div class="dd-item" onclick="selectCatFromMenu('mieles','🍯 Mieles',this)">
+          <span>🍯</span><span>Mieles</span>
+        </div>
+        <div class="dd-item" onclick="selectCatFromMenu('frescos','🧀 Frescos',this)">
+          <span>🧀</span><span>Frescos</span>
+        </div>
+        <div class="dd-item" onclick="selectCatFromMenu('granos','🌾 Granos',this)">
+          <span>🌾</span><span>Granos, Legumbres y Semillas</span>
+        </div>
+        <div class="dd-item" onclick="selectCatFromMenu('artesanal','🧴 Artesanal',this)">
+          <span>🧴</span><span>Producción Artesanal</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón de entrega -->
+    <button id="delivery-pill" onclick="reabrirModal()"
+      class="flex items-center gap-1.5 cursor-pointer rounded-full px-3 py-1.5 text-xs font-medium border transition-all hover:border-verde flex-1 max-w-[180px] min-w-0"
+      style="background:#f5ede0;border-color:#e8d9c4;color:#7a5c2e;">
+      <i data-lucide="map-pin" class="w-3.5 h-3.5 flex-shrink-0" style="color:#7a5c2e;"></i>
+      <span id="delivery-pill-text" class="truncate hidden xs:block sm:block">¿Dónde te entregamos?</span>
+      <i data-lucide="chevron-down" class="w-3 h-3 flex-shrink-0"></i>
+    </button>
+
+    <!-- Acciones -->
+    <div class="flex items-center gap-2 flex-shrink-0">
+      <!-- Botón FAQ -->
+      <a href="#faq"
+        class="hidden sm:flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium border transition-all hover:border-verde"
+        style="background:#f5ede0;border-color:#e8d9c4;color:#2e1f0e;">
+        <i data-lucide="circle-help" class="w-4 h-4" style="color:#2d5a27;"></i>
+        Preguntas frecuentes
+      </a>
+      <button onclick="toggleCart()" class="relative p-2 rounded-full transition-colors hover:bg-tierra-2">
+        <i data-lucide="shopping-basket" class="w-5 h-5" style="color:#2e1f0e;"></i>
+        <span id="cart-count-badge" class="absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center hidden"
+              style="background:#2d5a27;color:#fdf8f1;">0</span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section class="relative overflow-hidden" style="background:linear-gradient(160deg,#1a3a16 0%,#2d5a27 55%,#4a7c43 100%);">
+  <!-- Decoraciones orgánicas -->
+  <div class="absolute top-0 right-0 w-64 h-64 blob opacity-10" style="background:radial-gradient(circle,#fdf8f1,transparent);transform:translate(30%,-20%);"></div>
+  <div class="absolute bottom-0 left-0 w-48 h-48 blob opacity-10" style="background:radial-gradient(circle,#fdf8f1,transparent);transform:translate(-20%,20%);"></div>
+
+  <div class="max-w-6xl mx-auto px-4 py-16 md:py-24 relative z-10">
+    <div class="max-w-2xl">
+      <div class="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-6 text-xs font-medium tracking-wider uppercase fade-up"
+           style="background:rgba(253,248,241,.15);color:#d6e8d3;border:1px solid rgba(214,232,211,.3);">
+        <i data-lucide="leaf" class="w-3.5 h-3.5"></i>
+        Sin agrotóxicos · Sin intermediarios
+      </div>
+
+      <h1 class="serif text-4xl md:text-6xl font-bold leading-tight mb-5 fade-up delay-1" style="color:#fdf8f1;">
+        Del campo<br/>
+        <em style="color:#d6e8d3;">a tu mesa.</em>
+      </h1>
+
+      <p class="text-base md:text-lg leading-relaxed mb-8 fade-up delay-2" style="color:rgba(253,248,241,.80);">
+        Somos agricultores familiares organizados. Cada producto que comprás sostiene la 
+        <strong style="color:#d6e8d3;">soberanía alimentaria</strong> y apoya a familias que trabajan la tierra con amor y sin venenos.
+      </p>
+
+      <div class="flex flex-wrap gap-3 fade-up delay-3">
+        <a href="#productos" class="btn-verde px-6 py-3 rounded-2xl font-medium flex items-center gap-2"
+           style="background:#fdf8f1;color:#2d5a27;">
+          <i data-lucide="shopping-basket" class="w-4 h-4"></i>
+          Ver productos
+        </a>
+        <a href="#nosotros" class="px-6 py-3 rounded-2xl font-medium flex items-center gap-2 transition-colors"
+           style="background:rgba(253,248,241,.12);color:#fdf8f1;border:1.5px solid rgba(253,248,241,.25);">
+          <i data-lucide="users" class="w-4 h-4"></i>
+          Quiénes somos
+        </a>
+      </div>
+
+      <!-- Stats rápidas -->
+      <div class="mt-12 grid grid-cols-3 gap-4 md:gap-8 fade-up delay-4">
+        <div>
+          <p class="serif text-3xl font-bold" style="color:#fdf8f1;">+40</p>
+          <p class="text-xs mt-0.5" style="color:rgba(253,248,241,.65);">Familias productoras</p>
+        </div>
+        <div>
+          <p class="serif text-3xl font-bold" style="color:#fdf8f1;">10</p>
+          <p class="text-xs mt-0.5" style="color:rgba(253,248,241,.65);">Zonas de entrega</p>
+        </div>
+        <div>
+          <p class="serif text-3xl font-bold" style="color:#fdf8f1;">0%</p>
+          <p class="text-xs mt-0.5" style="color:rgba(253,248,241,.65);">Agrotóxicos</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wave bottom -->
+  <div class="relative h-10 md:h-16" style="background:#fdf8f1;">
+    <svg class="absolute bottom-full left-0 w-full" viewBox="0 0 1440 64" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0 64L1440 64L1440 0C1200 56 960 64 720 48C480 32 240 8 0 32Z" fill="#fdf8f1"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     BANNER DE ENTREGA ACTIVA
+══════════════════════════════════════════ -->
+<div id="delivery-banner" class="hidden max-w-6xl mx-auto px-4 -mt-4 mb-2 relative z-10">
+  <div class="rounded-2xl px-5 py-3 flex items-center gap-3 text-sm" style="background:#d6e8d3;border:1px solid #b8d4b4;">
+    <i data-lucide="check-circle-2" class="w-4 h-4 flex-shrink-0" style="color:#2d5a27;"></i>
+    <span id="delivery-banner-text" style="color:#1a3a16;"></span>
+    <button onclick="reabrirModal()" class="ml-auto text-xs underline flex-shrink-0" style="color:#2d5a27;">Cambiar</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CATEGORÍAS
+══════════════════════════════════════════ -->
+<div id="sticky-cats">
+<section class="max-w-6xl mx-auto px-4 pt-4 pb-3">
+  <div class="flex items-center gap-3 mb-2">
+    <div class="deco-line"></div>
+    <p class="text-xs font-medium uppercase tracking-widest" style="color:#7a5c2e;">Categorías</p>
+  </div>
+
+  <!-- Buscador -->
+  <div class="relative mt-3 mb-4 max-w-sm">
+    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style="color:#7a5c2e;"></i>
+    <input
+      id="search-input"
+      type="search"
+      placeholder="Buscar productos…"
+      oninput="buscarProductos(this.value)"
+      class="field pl-9 pr-4"
+      style="border-radius:99px;"
+    />
+    <button id="search-clear" onclick="limpiarBusqueda()" class="absolute right-3 top-1/2 -translate-y-1/2 hidden p-0.5 rounded-full transition-colors hover:bg-tierra-2">
+      <i data-lucide="x" class="w-3.5 h-3.5" style="color:#7a5c2e;"></i>
+    </button>
+  </div>
+
+  <div class="flex gap-2 mt-3 overflow-x-auto pb-2" style="scrollbar-width:none;-ms-overflow-style:none;" id="cat-pills">
+    <button class="cat-pill active border rounded-full px-4 py-1.5 text-sm font-medium"
+            style="border-color:#e8d9c4;color:#2e1f0e;" onclick="filterCat('todos',this)">
+      Todos
+    </button>
+    <button class="cat-pill border rounded-full px-4 py-1.5 text-sm font-medium"
+            style="border-color:#e8d9c4;color:#2e1f0e;" onclick="filterCat('verduras',this)">
+      🥬 Verduras
+    </button>
+    <button class="cat-pill border rounded-full px-4 py-1.5 text-sm font-medium"
+            style="border-color:#e8d9c4;color:#2e1f0e;" onclick="filterCat('frutas',this)">
+      🍎 Frutas
+    </button>
+    <button class="cat-pill border rounded-full px-4 py-1.5 text-sm font-medium"
+            style="border-color:#e8d9c4;color:#2e1f0e;" onclick="filterCat('huevos',this)">
+      🥚 Huevos / Hongos
+    </button>
+    <button class="cat-pill border rounded-full px-4 py-1.5 text-sm font-medium"
+            style="border-color:#e8d9c4;color:#2e1f0e;" onclick="filterCat('almacen',this)">
+      🫙 Productos de Almacén
+    </button>
+    <button class="cat-pill border rounded-full px-4 py-1.5 text-sm font-medium"
+            style="border-color:#e8d9c4;color:#2e1f0e;" onclick="filterCat('mieles',this)">
+      🍯 Mieles
+    </button>
+    <button class="cat-pill border rounded-full px-4 py-1.5 text-sm font-medium"
+            style="border-color:#e8d9c4;color:#2e1f0e;" onclick="filterCat('frescos',this)">
+      🧀 Frescos
+    </button>
+    <button class="cat-pill border rounded-full px-4 py-1.5 text-sm font-medium"
+            style="border-color:#e8d9c4;color:#2e1f0e;" onclick="filterCat('granos',this)">
+      🌾 Granos, Legumbres y Semillas
+    </button>
+    <button class="cat-pill border rounded-full px-4 py-1.5 text-sm font-medium"
+            style="border-color:#e8d9c4;color:#2e1f0e;" onclick="filterCat('artesanal',this)">
+      🧴 Producción Artesanal
+    </button>
+  </div>
+</section>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PRODUCTOS
+══════════════════════════════════════════ -->
+<section id="productos" class="max-w-6xl mx-auto px-4 py-6">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="serif text-2xl md:text-3xl font-semibold" style="color:#2e1f0e;">Productos de temporada</h2>
+    <span id="prod-count" class="text-sm" style="color:#7a5c2e;"></span>
+  </div>
+
+  <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     NOSOTROS
+══════════════════════════════════════════ -->
+<section id="nosotros" class="max-w-6xl mx-auto px-4 py-14">
+  <div class="rounded-3xl overflow-hidden" style="background:linear-gradient(135deg,#2d5a27,#1a3a16);">
+    <div class="p-8 md:p-14 grid md:grid-cols-2 gap-10 items-center">
+      <div>
+        <p class="organic-tag mb-4" style="background:rgba(214,232,211,.2);color:#d6e8d3;">Nuestra historia</p>
+        <h2 class="serif text-3xl md:text-4xl font-bold mb-5 leading-snug" style="color:#fdf8f1;">
+          Agricultura<br/>con identidad.
+        </h2>
+        <p class="leading-relaxed mb-5" style="color:rgba(253,248,241,.78);">
+          La <strong style="color:#d6e8d3;">Unión de Trabajadores de la Tierra</strong> nació de la necesidad de que los agricultores familiares puedan vender sin intermediarios, sosteniendo precios justos para productores y consumidores.
+        </p>
+        <p class="leading-relaxed mb-8" style="color:rgba(253,248,241,.78);">
+          Nuestro nodo en Morón conecta a más de 40 familias del Conurbano con vecinos que eligen comer sano, apoyar lo local y construir soberanía alimentaria.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <div class="flex items-center gap-2 text-sm" style="color:#d6e8d3;">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+            Agroecológico certificado
+          </div>
+          <div class="flex items-center gap-2 text-sm" style="color:#d6e8d3;">
+            <i data-lucide="handshake" class="w-4 h-4"></i>
+            Precio justo
+          </div>
+          <div class="flex items-center gap-2 text-sm" style="color:#d6e8d3;">
+            <i data-lucide="heart" class="w-4 h-4"></i>
+            Sin agrotóxicos
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="prod-img h-36 rounded-2xl"><i data-lucide="wheat" class="w-10 h-10" style="color:#7a5c2e;"></i></div>
+        <div class="prod-img h-36 rounded-2xl mt-6"><i data-lucide="leaf" class="w-10 h-10" style="color:#7a5c2e;"></i></div>
+        <div class="prod-img h-36 rounded-2xl"><i data-lucide="sun" class="w-10 h-10" style="color:#7a5c2e;"></i></div>
+        <div class="prod-img h-36 rounded-2xl mt-6"><i data-lucide="droplets" class="w-10 h-10" style="color:#7a5c2e;"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     NODOS
+══════════════════════════════════════════ -->
+<section id="nodos" class="max-w-6xl mx-auto px-4 pb-14">
+  <div class="flex items-center gap-3 mb-6">
+    <div class="deco-line"></div>
+    <h2 class="serif text-2xl font-semibold" style="color:#2e1f0e;">Puntos de retiro</h2>
+  </div>
+  <div class="grid md:grid-cols-3 gap-4">
+    <div class="map-placeholder h-40 md:col-span-2" style="min-height:180px;">
+      <i data-lucide="map" class="w-8 h-8" style="color:#2d5a27;"></i>
+      <span class="text-sm" style="color:#4a7c43;">Mapa interactivo próximamente</span>
+    </div>
+    <div class="space-y-3">
+      <div class="rounded-2xl p-4" style="background:#f5ede0;border:1px solid #e8d9c4;">
+        <p class="font-medium text-sm mb-1" style="color:#2e1f0e;">📍 Nodo Morón Central</p>
+        <p class="text-xs" style="color:#7a5c2e;">Av. Rivadavia 17850</p>
+        <p class="text-xs mt-0.5" style="color:#7a5c2e;">Miérc. y Sáb · 9 a 13 hs</p>
+        <a href="https://maps.google.com/?q=Av.+Rivadavia+17850+Moron" target="_blank" class="text-xs mt-2 inline-flex items-center gap-1 font-medium" style="color:#2d5a27;">Ver en mapa →</a>
+      </div>
+      <div class="rounded-2xl p-4" style="background:#f5ede0;border:1px solid #e8d9c4;">
+        <p class="font-medium text-sm mb-1" style="color:#2e1f0e;">📍 Nodo Castelar</p>
+        <p class="text-xs" style="color:#7a5c2e;">9 de Julio 230</p>
+        <p class="text-xs mt-0.5" style="color:#7a5c2e;">Jueves · 10 a 13 hs</p>
+        <a href="https://maps.google.com/?q=9+de+Julio+230+Castelar" target="_blank" class="text-xs mt-2 inline-flex items-center gap-1 font-medium" style="color:#2d5a27;">Ver en mapa →</a>
+      </div>
+      <div class="rounded-2xl p-4" style="background:#f5ede0;border:1px solid #e8d9c4;">
+        <p class="font-medium text-sm mb-1" style="color:#2e1f0e;">📍 Nodo Haedo</p>
+        <p class="text-xs" style="color:#7a5c2e;">Mitre 580</p>
+        <p class="text-xs mt-0.5" style="color:#7a5c2e;">Viernes · 9 a 12 hs</p>
+        <a href="https://maps.google.com/?q=Mitre+580+Haedo" target="_blank" class="text-xs mt-2 inline-flex items-center gap-1 font-medium" style="color:#2d5a27;">Ver en mapa →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PREGUNTAS FRECUENTES
+══════════════════════════════════════════ -->
+<section id="faq" class="max-w-6xl mx-auto px-4 pb-14">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="deco-line"></div>
+    <h2 class="serif text-2xl font-semibold" style="color:#2e1f0e;">Preguntas frecuentes</h2>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-x-12">
+
+    <!-- Columna izquierda -->
+    <div>
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="true">
+          <span class="faq-q">¿Cuándo tengo que hacer el pedido?</span>
+          <span class="faq-icon"><i data-lucide="plus" class="w-3.5 h-3.5" style="color:#7a5c2e;"></i></span>
+        </button>
+        <div class="faq-body open"><p>Desde el lunes al mediodía hasta el miércoles a la medianoche. Si no llegaste a hacer el pedido hasta el mediodía del jueves, no dudes en mandarnos un mensaje igual — hacemos lo posible para incluirte.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">
+          <span class="faq-q">¿Cuáles son las zonas de envío?</span>
+          <span class="faq-icon"><i data-lucide="plus" class="w-3.5 h-3.5" style="color:#7a5c2e;"></i></span>
+        </button>
+        <div class="faq-body"><p><strong>Zona 1 (envío más económico):</strong> Morón, Haedo, Villa Luzuriaga, Castelar.<br/><strong>Zona 2:</strong> El Palomar, Villa Tesei, Hurlingham, Ituzaingó, San Justo.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">
+          <span class="faq-q">¿Los productos tienen agrotóxicos?</span>
+          <span class="faq-icon"><i data-lucide="plus" class="w-3.5 h-3.5" style="color:#7a5c2e;"></i></span>
+        </button>
+        <div class="faq-body"><p>No. Todos nuestros productos son agroecológicos, producidos sin agroquímicos ni pesticidas. La UTT certifica que las familias productoras trabajan la tierra de manera natural y sostenible.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">
+          <span class="faq-q">¿Puedo elegir las verduras del bolsón?</span>
+          <span class="faq-icon"><i data-lucide="plus" class="w-3.5 h-3.5" style="color:#7a5c2e;"></i></span>
+        </button>
+        <div class="faq-body"><p>Los bolsones se arman con las variedades disponibles de la semana, iguales para todos. Esto garantiza precio justo y cero desperdicio. Sí podés agregar una nota con alergias o preferencias y hacemos lo posible.</p></div>
+      </div>
+    </div>
+
+    <!-- Columna derecha -->
+    <div>
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">
+          <span class="faq-q">¿Cómo puedo pagar?</span>
+          <span class="faq-icon"><i data-lucide="plus" class="w-3.5 h-3.5" style="color:#7a5c2e;"></i></span>
+        </button>
+        <div class="faq-body"><p>Aceptamos Mercado Pago (link de pago personalizado), transferencia bancaria, MODO y efectivo al retirar o recibir. Podés elegir el método al confirmar el pedido.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">
+          <span class="faq-q">¿Dónde puedo retirar mi pedido?</span>
+          <span class="faq-icon"><i data-lucide="plus" class="w-3.5 h-3.5" style="color:#7a5c2e;"></i></span>
+        </button>
+        <div class="faq-body"><p>Tenemos tres puntos de retiro: <strong>Nodo Central Morón</strong> (Av. Rivadavia 17850 · Miérc. y Sáb. 9–13 hs), <strong>Nodo Castelar</strong> (9 de Julio 230 · Jueves 10–13 hs) y <strong>Nodo Haedo</strong> (Mitre 580 · Viernes 9–12 hs).</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">
+          <span class="faq-q">¿Qué es la UTT?</span>
+          <span class="faq-icon"><i data-lucide="plus" class="w-3.5 h-3.5" style="color:#7a5c2e;"></i></span>
+        </button>
+        <div class="faq-body"><p>La Unión de Trabajadores de la Tierra es una organización de agricultores familiares que produce y vende sin intermediarios. Nuestro nodo en Morón conecta a más de 40 familias del Conurbano con vecinos que eligen comer sano y apoyar lo local.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false">
+          <span class="faq-q">¿Puedo hacer un pedido fuera del horario?</span>
+          <span class="faq-icon"><i data-lucide="plus" class="w-3.5 h-3.5" style="color:#7a5c2e;"></i></span>
+        </button>
+        <div class="faq-body"><p>Si llegaste tarde o tenés alguna duda puntual, escribinos por WhatsApp. Siempre intentamos dar una solución. Para pedidos regulares, lo ideal es hacerlos antes del miércoles a la medianoche.</p></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
+<footer style="background:#1a3a16;color:rgba(253,248,241,.75);">
+  <div class="max-w-6xl mx-auto px-4 py-10">
+    <div class="grid md:grid-cols-3 gap-8 pb-8 border-b" style="border-color:rgba(255,255,255,.1);">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background:rgba(255,255,255,.1);">
+            <i data-lucide="sprout" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="serif font-semibold text-white">UTT Nodo Morón</span>
+        </div>
+        <p class="text-sm leading-relaxed">Unión de Trabajadores de la Tierra — alimentos agroecológicos con soberanía y sin venenos.</p>
+      </div>
+      <div>
+        <p class="font-medium text-white mb-3 text-sm">Contacto</p>
+        <div class="space-y-2 text-sm">
+          <div class="flex items-center gap-2">
+            <i data-lucide="phone" class="w-4 h-4"></i>
+            <a href="https://wa.me/5491168044276" target="_blank" class="hover:text-white transition-colors">WhatsApp: 11 6804-4276 (Duncan)</a>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="instagram" class="w-4 h-4"></i>
+            <a href="https://instagram.com/uttnodomoron" target="_blank" class="hover:text-white transition-colors">@uttnodomoron</a>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="mail" class="w-4 h-4"></i>
+            <a href="mailto:uttnodomoron@gmail.com" class="hover:text-white transition-colors">uttnodomoron@gmail.com</a>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="font-medium text-white mb-3 text-sm">Días de reparto</p>
+        <div class="space-y-1 text-sm">
+          <p>Miércoles — Morón y zonas cercanas</p>
+          <p>Jueves — Castelar / Ituzaingó</p>
+          <p>Viernes — Haedo / El Palomar</p>
+          <p>Sábado — Retiro por nodos</p>
+        </div>
+      </div>
+    </div>
+    <p class="text-center text-xs pt-6" style="color:rgba(253,248,241,.4);">
+      <a href="#" class="inline-flex items-center gap-1.5 text-xs mb-3 transition-colors hover:text-white" style="color:rgba(253,248,241,.4);">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        Volver al inicio
+      </a><br/>
+      © 2025 UTT Nodo Morón · Hecho con ❤️ para la agricultura familiar
+    </p>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     CARRITO SIDEBAR
+══════════════════════════════════════════ -->
+<div id="cart-overlay" class="fixed inset-0 z-40 hidden" style="background:rgba(20,35,15,.45);"
+     onclick="toggleCart()"></div>
+
+<aside id="cart-sidebar" class="fixed right-0 top-0 bottom-0 z-50 w-full sm:w-96 flex flex-col shadow-2xl"
+       style="background:#fffcf6;">
+  <!-- Header -->
+  <div class="flex items-center justify-between px-5 py-4 border-b" style="border-color:#e8d9c4;">
+    <div class="flex items-center gap-2">
+      <i data-lucide="shopping-basket" class="w-5 h-5" style="color:#2d5a27;"></i>
+      <h2 class="serif font-semibold text-lg" style="color:#2e1f0e;">Tu pedido</h2>
+    </div>
+    <button onclick="toggleCart()" class="p-1.5 rounded-full hover:bg-tierra-2 transition-colors">
+      <i data-lucide="x" class="w-5 h-5" style="color:#2e1f0e;"></i>
+    </button>
+  </div>
+
+  <!-- Info de entrega en carrito -->
+  <div id="cart-delivery-info" class="px-5 py-3 text-sm border-b" style="border-color:#e8d9c4;background:#f5ede0;">
+    <div class="flex items-center gap-2">
+      <i data-lucide="map-pin" class="w-4 h-4 flex-shrink-0" style="color:#2d5a27;"></i>
+      <span id="cart-delivery-text" style="color:#2e1f0e;">Sin entrega seleccionada</span>
+      <button onclick="reabrirModal()" class="ml-auto text-xs underline flex-shrink-0" style="color:#2d5a27;">Cambiar</button>
+    </div>
+  </div>
+
+  <!-- Items -->
+  <div id="cart-items" class="flex-1 overflow-y-auto px-5 py-4 space-y-3"></div>
+
+  <!-- Empty state -->
+  <div id="cart-empty" class="flex-1 flex flex-col items-center justify-center px-5 text-center">
+    <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4" style="background:#f5ede0;">
+      <i data-lucide="shopping-basket" class="w-7 h-7" style="color:#e8d9c4;"></i>
+    </div>
+    <p class="serif text-lg font-medium mb-2" style="color:#2e1f0e;">Tu canasta está vacía</p>
+    <p class="text-sm" style="color:#7a5c2e;">Agregá productos frescos del campo</p>
+  </div>
+
+  <!-- Resumen y botón -->
+  <div id="cart-footer" class="hidden border-t px-5 py-5 space-y-3" style="border-color:#e8d9c4;">
+    <div class="space-y-1.5">
+      <div class="flex justify-between text-sm" style="color:#7a5c2e;">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">$0</span>
+      </div>
+      <div class="flex justify-between text-sm" id="envio-row">
+        <span style="color:#7a5c2e;">Envío</span>
+        <span id="cart-envio" style="color:#2d5a27;font-weight:500;">—</span>
+      </div>
+      <div class="flex justify-between font-semibold text-base pt-2 border-t" style="border-color:#e8d9c4;color:#2e1f0e;">
+        <span>Total</span>
+        <span id="cart-total">$0</span>
+      </div>
+    </div>
+    <button onclick="abrirCheckout()"
+      class="btn-verde w-full py-3.5 rounded-2xl font-medium flex items-center justify-center gap-2">
+      <i data-lucide="credit-card" class="w-5 h-5"></i>
+      Elegir pago y confirmar pedido
+    </button>
+    <p class="text-center text-xs" style="color:#7a5c2e;">Elegís cómo pagás en el siguiente paso</p>
+  </div>
+</aside>
+
+<!-- ══════════════════════════════════════════
+     CHECKOUT MODAL
+══════════════════════════════════════════ -->
+<div id="checkout-overlay" class="fixed inset-0 z-[90] hidden items-end sm:items-center justify-center p-0 sm:p-4">
+  <div id="checkout-box"
+       class="relative w-full sm:max-w-lg bg-crema rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+       style="max-height:92vh;">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between px-6 pt-6 pb-4 flex-shrink-0" style="border-bottom:1px solid #e8d9c4;">
+      <div>
+        <p class="organic-tag mb-1">Paso final</p>
+        <h2 class="serif text-xl font-semibold" style="color:#2e1f0e;">Confirmá tu pedido</h2>
+      </div>
+      <button onclick="cerrarCheckout()" class="p-2 rounded-full transition-colors" style="background:#f5ede0;">
+        <i data-lucide="x" class="w-5 h-5" style="color:#2e1f0e;"></i>
+      </button>
+    </div>
+
+    <!-- Progress steps -->
+    <div class="flex items-center px-6 py-4 gap-2 flex-shrink-0">
+      <div class="step-dot done"><i data-lucide="check" class="w-3.5 h-3.5"></i></div>
+      <div class="step-line done"></div>
+      <div class="step-dot done"><i data-lucide="check" class="w-3.5 h-3.5"></i></div>
+      <div class="step-line done"></div>
+      <div class="step-dot active">3</div>
+    </div>
+    <div class="flex px-6 pb-3 flex-shrink-0">
+      <span class="text-xs flex-1 text-center" style="color:#2d5a27;">Entrega</span>
+      <span class="text-xs flex-1 text-center" style="color:#2d5a27;">Productos</span>
+      <span class="text-xs flex-1 text-center font-medium" style="color:#2d5a27;">Pago</span>
+    </div>
+
+    <!-- Scrollable content -->
+    <div class="overflow-y-auto flex-1 px-6 pb-4 space-y-5">
+
+      <!-- Resumen compacto -->
+      <div class="rounded-2xl p-4 space-y-2" style="background:#f5ede0;">
+        <p class="text-xs font-medium uppercase tracking-wider mb-3" style="color:#7a5c2e;">Resumen del pedido</p>
+        <div id="checkout-items-list" class="space-y-1.5 text-sm"></div>
+        <div class="border-t pt-2 mt-2 space-y-1" style="border-color:#e8d9c4;">
+          <div class="flex justify-between text-sm" style="color:#7a5c2e;">
+            <span>Envío</span><span id="co-envio">—</span>
+          </div>
+          <div class="flex justify-between font-semibold text-base" style="color:#2e1f0e;">
+            <span>Total</span><span id="co-total">$0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dirección confirmada -->
+      <div id="co-direccion-box" class="rounded-2xl p-4 flex items-start gap-3" style="background:#eef7ec;border:1px solid #c8e0c4;">
+        <i data-lucide="map-pin" class="w-4 h-4 mt-0.5 flex-shrink-0" style="color:#2d5a27;"></i>
+        <span id="co-direccion-text" class="text-sm" style="color:#1a3a16;"></span>
+      </div>
+
+      <!-- Método de pago -->
+      <div>
+        <p class="text-sm font-medium mb-3" style="color:#2e1f0e;">¿Cómo querés pagar?</p>
+        <div class="space-y-2.5">
+
+          <!-- Mercado Pago -->
+          <div class="pago-card" onclick="seleccionarPago('mercadopago')" id="pago-mercadopago">
+            <div class="radio-dot"></div>
+            <div class="pago-icon" style="background:#fff7e6;">💳</div>
+            <div class="flex-1">
+              <p class="font-medium text-sm" style="color:#2e1f0e;">Mercado Pago</p>
+              <p class="text-xs" style="color:#7a5c2e;">Tarjeta, débito o saldo MP · Link de pago</p>
+            </div>
+            <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:#fff3cd;color:#856404;">Popular</span>
+          </div>
+
+          <!-- Transferencia -->
+          <div class="pago-card" onclick="seleccionarPago('transferencia')" id="pago-transferencia">
+            <div class="radio-dot"></div>
+            <div class="pago-icon" style="background:#e8f4fd;">🏦</div>
+            <div class="flex-1">
+              <p class="font-medium text-sm" style="color:#2e1f0e;">Transferencia bancaria</p>
+              <p class="text-xs" style="color:#7a5c2e;">CBU / CVU · Sin comisión</p>
+            </div>
+          </div>
+
+          <!-- MODO -->
+          <div class="pago-card" onclick="seleccionarPago('modo')" id="pago-modo">
+            <div class="radio-dot"></div>
+            <div class="pago-icon" style="background:#f0e8ff;">📱</div>
+            <div class="flex-1">
+              <p class="font-medium text-sm" style="color:#2e1f0e;">MODO</p>
+              <p class="text-xs" style="color:#7a5c2e;">Pagos interoperables entre billeteras</p>
+            </div>
+          </div>
+
+          <!-- Efectivo -->
+          <div class="pago-card" onclick="seleccionarPago('efectivo')" id="pago-efectivo">
+            <div class="radio-dot"></div>
+            <div class="pago-icon" style="background:#eef7ec;">💵</div>
+            <div class="flex-1">
+              <p class="font-medium text-sm" style="color:#2e1f0e;">Efectivo al recibir</p>
+              <p class="text-xs" style="color:#7a5c2e;">Pagás cuando te entregamos o retirás</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Info dinámica según método -->
+        <div id="info-mercadopago" class="mt-3 rounded-xl p-3.5 text-sm" style="background:#fff7e6;border:1px solid #ffe4a0;">
+          <p class="font-medium mb-1" style="color:#856404;">💳 Mercado Pago</p>
+          <p style="color:#7a5c2e;">Te enviamos un <strong>link de pago personalizado</strong> por WhatsApp una vez que confirmemos el pedido. Podés pagar con cualquier tarjeta o saldo en tu cuenta.</p>
+        </div>
+
+        <div id="info-transferencia" class="mt-3 rounded-xl p-3.5 text-sm" style="background:#e8f4fd;border:1px solid #b8d8f0;">
+          <p class="font-medium mb-2" style="color:#1565c0;">🏦 Datos bancarios</p>
+          <div class="space-y-1 font-mono text-xs" style="color:#2e1f0e;">
+            <p>CBU: <strong>0000000000000000000000</strong></p>
+            <p>Alias: <strong>UTT.NODO.MORON</strong></p>
+            <p>Titular: <strong>UTT Nodo Morón</strong></p>
+            <p>CUIT: <strong>20-XXXXXXXX-X</strong></p>
+          </div>
+          <p class="mt-2 text-xs" style="color:#7a5c2e;">Enviá el comprobante por WhatsApp para confirmar tu pedido.</p>
+        </div>
+
+        <div id="info-modo" class="mt-3 rounded-xl p-3.5 text-sm" style="background:#f0e8ff;border:1px solid #d4b8f0;">
+          <p class="font-medium mb-1" style="color:#6a1b9a;">📱 MODO</p>
+          <p style="color:#7a5c2e;">Escaneá el QR o usá el alias <strong>UTT.NODO.MORON</strong> desde tu billetera compatible. Confirmá el pago enviando el comprobante por WhatsApp.</p>
+        </div>
+
+        <div id="info-efectivo" class="mt-3 rounded-xl p-3.5 text-sm" style="background:#eef7ec;border:1px solid #c8e0c4;display:none;">
+          <p class="font-medium mb-1" style="color:#2d5a27;">💵 Efectivo</p>
+          <p style="color:#7a5c2e;">Coordinamos la entrega por WhatsApp y pagás en el momento. Tené el monto exacto si podés, así agilizamos la entrega. 🙏</p>
+        </div>
+
+      </div>
+
+      <!-- Nota opcional -->
+      <div>
+        <label class="text-sm font-medium block mb-1.5" style="color:#2e1f0e;">
+          Nota para el pedido <span class="text-xs font-normal" style="color:#7a5c2e;">(opcional)</span>
+        </label>
+        <textarea id="co-nota" rows="2" placeholder="Ej: dejar en portería, sin cebolla, etc."
+          class="field resize-none" style="border-radius:12px;"></textarea>
+      </div>
+
+    </div>
+
+    <!-- Footer fijo -->
+    <div class="px-6 py-5 flex-shrink-0 space-y-3" style="border-top:1px solid #e8d9c4;background:#fffcf6;">
+      <p id="err-pago" class="text-xs text-center hidden" style="color:#c0392b;">
+        ⚠️ Seleccioná un método de pago para continuar
+      </p>
+      <button onclick="confirmarCheckout()"
+        class="btn-verde w-full py-3.5 rounded-2xl font-medium flex items-center justify-center gap-2 text-base">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        Confirmar y enviar pedido por WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CHECKOUT SUCCESS MODAL
+══════════════════════════════════════════ -->
+<div id="success-overlay" class="fixed inset-0 z-[95] hidden items-center justify-center p-4"
+     style="backdrop-filter:blur(10px);background:rgba(20,35,15,.75);">
+  <div class="bg-crema rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center pop-in">
+    <div class="check-anim w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5"
+         style="background:#d6e8d3;">
+      <i data-lucide="check-circle-2" class="w-10 h-10" style="color:#2d5a27;"></i>
+    </div>
+    <h3 class="serif text-2xl font-bold mb-2" style="color:#2e1f0e;">¡Pedido enviado!</h3>
+    <p class="text-sm mb-6" style="color:#7a5c2e;">
+      Tu pedido fue enviado a WhatsApp. Nos comunicamos a la brevedad para coordinar la entrega.
+    </p>
+    <div class="rounded-xl p-3 mb-5 text-sm" style="background:#f5ede0;color:#2e1f0e;">
+      <span id="success-pago-text"></span>
+    </div>
+    <button onclick="cerrarSuccess()"
+      class="btn-verde w-full py-3 rounded-2xl font-medium">
+      Volver a la tienda
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TOAST
+══════════════════════════════════════════ -->
+<div id="toast" role="status" aria-live="polite">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toast-msg">Producto agregado</span>
+</div>
+
+<!-- ══════════════════════════════════════════
+     BOTÓN WHATSAPP FLOTANTE
+══════════════════════════════════════════ -->
+<button id="wa-btn" onclick="enviarWhatsApp()"
+  class="fixed bottom-6 right-6 z-30 w-14 h-14 rounded-full flex items-center justify-center float-wa"
+  style="background:#25d366;" title="Pedido por WhatsApp">
+  <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="white">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</button>
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════ -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ─── DATOS ───────────────────────────────────
+const PRODUCTOS = [
+  {
+    id: 1, cat: 'verduras', nombre: 'Bolsón de Verduras Chico — 3 kg',
+    desc: 'Verduras de estación: lechuga, zanahoria, tomate, remolacha y más.',
+    precio: 4500, unidad: 'bolsón', emoji: '🥬',
+    tag: 'Más pedido', tagColor: '#2d5a27',
+  },
+  {
+    id: 2, cat: 'verduras', nombre: 'Bolsón de Verduras Familiar — 5 kg',
+    desc: 'Variedad completa para toda la semana. Incluye hoja, raíz y fruta.',
+    precio: 6800, unidad: 'bolsón', emoji: '🥦',
+    tag: 'Ideal para 4', tagColor: '#4a7c43',
+  },
+  {
+    id: 3, cat: 'frutas', nombre: 'Bolsón de Frutas — 4 kg',
+    desc: 'Frutas de temporada directas del productor. Sin cámaras frigoríficas.',
+    precio: 5500, unidad: 'bolsón', emoji: '🍎',
+    tag: 'Temporada', tagColor: '#7a5c2e',
+  },
+  {
+    id: 4, cat: 'mieles', nombre: 'Miel Cooperativa — 500g',
+    desc: 'Miel pura de apicultores asociados. Sin procesar, directa del panal.',
+    precio: 3200, unidad: 'frasco', emoji: '🍯',
+    tag: 'Sin procesar', tagColor: '#7a5c2e',
+  },
+  {
+    id: 5, cat: 'granos', nombre: 'Harina de Trigo Integral — 1kg',
+    desc: 'Molida en piedra, con todo el salvado. Trigo sin agrotóxicos.',
+    precio: 1800, unidad: 'kg', emoji: '🌾',
+  },
+  {
+    id: 6, cat: 'almacen', nombre: 'Aceite de Girasol — 1L',
+    desc: 'Prensado en frío, sin refinado industrial. Sabor natural auténtico.',
+    precio: 2400, unidad: 'litro', emoji: '🌻',
+  },
+  {
+    id: 7, cat: 'frescos', nombre: 'Queso Cremoso Artesanal',
+    desc: 'Elaborado por tamberos agroecológicos del Conurbano.',
+    precio: 3800, unidad: 'kg', emoji: '🧀',
+    tag: 'Artesanal', tagColor: '#7a5c2e',
+  },
+  {
+    id: 8, cat: 'frescos', nombre: 'Yogur Natural — 500g',
+    desc: 'Fermentación natural, sin colorantes ni conservantes.',
+    precio: 1600, unidad: 'pote', emoji: '🥛',
+  },
+  {
+    id: 9, cat: 'huevos', nombre: 'Huevos de Campo — docena',
+    desc: 'Gallinas criadas a campo libre, sin jaulas ni antibióticos.',
+    precio: 2200, unidad: 'docena', emoji: '🥚',
+    tag: 'Campo libre', tagColor: '#4a7c43',
+  },
+  {
+    id: 10, cat: 'artesanal', nombre: 'Jabón de Tomillo y Arcilla',
+    desc: 'Jabón artesanal con plantas medicinales de nuestra huerta.',
+    precio: 1200, unidad: 'unidad', emoji: '🌿',
+    tag: 'Natural', tagColor: '#4a7c43',
+  },
+];
+
+const COSTOS_ENVIO = {
+  'Morón': 800, 'Haedo': 800, 'Villa Sarmiento': 800,
+  'El Palomar': 1000, 'Castelar': 1000, 'Villa Tesei': 1000,
+  'Hurlingham': 1200, 'Ituzaingó': 1200,
+  'San Justo': 1400, 'Villa Luzuriaga': 1400,
+};
+
+// ─── ESTADO ──────────────────────────────────
+let cart       = {};
+let delivMode  = null; // 'retiro' | 'envio'
+let delivData  = {};   // localidad, calle, numero, piso
+let catActiva  = 'todos';
+let terminoBusqueda = '';
+
+// ─── INICIALIZACIÓN ──────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+  cargarDesdeStorage();
+  renderProducts(catActiva);
+  actualizarBadge();
+  if (delivMode) {
+    actualizarUIEntrega();
+  } else {
+    // Primera visita: abrimos modal después de 1.2s para que el hero sea visible primero
+    setTimeout(() => reabrirModal(), 1200);
+  }
+});
+
+// ─── STORAGE ─────────────────────────────────
+function cargarDesdeStorage() {
+  const saved = localStorage.getItem('utt_delivery');
+  if (saved) {
+    const d = JSON.parse(saved);
+    delivMode = d.mode;
+    delivData = d.data || {};
+    cart      = JSON.parse(localStorage.getItem('utt_cart') || '{}');
+  }
+}
+function guardarStorage() {
+  localStorage.setItem('utt_delivery', JSON.stringify({ mode: delivMode, data: delivData }));
+  localStorage.setItem('utt_cart', JSON.stringify(cart));
+}
+
+// ─── MODAL ───────────────────────────────────
+let modoSeleccionado = null;
+
+function selectMode(mode) {
+  modoSeleccionado = mode;
+  document.getElementById('btn-retiro').classList.toggle('selected', mode === 'retiro');
+  document.getElementById('btn-envio').classList.toggle('selected',  mode === 'envio');
+  document.getElementById('form-envio').classList.toggle('hidden', mode !== 'envio');
+  document.getElementById('info-retiro').classList.toggle('hidden', mode !== 'retiro');
+  document.getElementById('btn-modal-text').textContent =
+    mode === 'envio' ? 'Guardar dirección y ver productos' : 'Elegir retiro y ver productos';
+  lucide.createIcons();
+}
+
+function confirmarModal() {
+  if (!modoSeleccionado) {
+    mostrarToast('👆 Elegí cómo querés recibir tu pedido');
+    return;
+    return;
+  }
+
+  if (modoSeleccionado === 'envio') {
+    const loc    = document.getElementById('sel-localidad').value;
+    const calle  = document.getElementById('inp-calle').value.trim();
+    const numero = document.getElementById('inp-numero').value.trim();
+    let valid = true;
+
+    ['err-localidad','err-calle','err-numero'].forEach(id =>
+      document.getElementById(id).classList.add('hidden'));
+    ['sel-localidad','inp-calle','inp-numero'].forEach(id =>
+      document.getElementById(id).classList.remove('error'));
+
+    if (!loc)    { showError('err-localidad','sel-localidad'); valid = false; }
+    if (!calle)  { showError('err-calle','inp-calle');         valid = false; }
+    if (!numero) { showError('err-numero','inp-numero');       valid = false; }
+
+    if (!valid) return;
+
+    delivData = {
+      localidad: loc,
+      calle, numero,
+      piso: document.getElementById('inp-piso').value.trim(),
+    };
+  } else {
+    delivData = {};
+  }
+
+  delivMode = modoSeleccionado;
+  guardarStorage();
+  cerrarModal();
+  actualizarUIEntrega();
+}
+
+function showError(errId, fieldId) {
+  document.getElementById(errId).classList.remove('hidden');
+  document.getElementById(fieldId).classList.add('error');
+}
+
+function cerrarModal() {
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.add('hidden');
+  overlay.classList.remove('flex');
+}
+
+function reabrirModal() {
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.remove('hidden');
+  overlay.classList.add('flex');
+  if (delivMode) selectMode(delivMode);
+  if (delivMode === 'envio' && delivData.localidad) {
+    document.getElementById('sel-localidad').value = delivData.localidad;
+    document.getElementById('inp-calle').value    = delivData.calle  || '';
+    document.getElementById('inp-numero').value   = delivData.numero || '';
+    document.getElementById('inp-piso').value     = delivData.piso   || '';
+  }
+  lucide.createIcons();
+}
+
+// ─── UI ENTREGA ──────────────────────────────
+function actualizarUIEntrega() {
+  const pill   = document.getElementById('delivery-pill');
+  const pillTx = document.getElementById('delivery-pill-text');
+  const banner = document.getElementById('delivery-banner');
+  const banTx  = document.getElementById('delivery-banner-text');
+  const cartTx = document.getElementById('cart-delivery-text');
+
+  let texto = '';
+  if (delivMode === 'retiro') {
+    texto = 'Retiro por nodo';
+  } else if (delivMode === 'envio') {
+    const { localidad, calle, numero, piso } = delivData;
+    texto = `${localidad} — ${calle} ${numero}${piso ? ` ${piso}` : ''}`;
+  }
+
+  pillTx.textContent = texto || '¿Dónde te entregamos?';
+
+  // Pill verde cuando está configurado
+  if (delivMode) {
+    pill.style.background    = '#eef7ec';
+    pill.style.borderColor   = '#2d5a27';
+    pill.style.color         = '#1a3a16';
+    pill.querySelector('[data-lucide="map-pin"]').style.color = '#2d5a27';
+  }
+
+  if (banTx)  banTx.textContent  = texto;
+  if (cartTx) cartTx.textContent = texto || 'Sin entrega seleccionada';
+  if (banner) banner.classList.toggle('hidden', !delivMode);
+  actualizarCarritoUI();
+}
+
+// ─── PRODUCTOS ───────────────────────────────
+function renderProducts(cat) {
+  const grid = document.getElementById('products-grid');
+  let filtered = cat === 'todos' ? PRODUCTOS : PRODUCTOS.filter(p => p.cat === cat);
+
+  // Filtrar por búsqueda
+  if (terminoBusqueda) {
+    const q = terminoBusqueda.toLowerCase();
+    filtered = filtered.filter(p =>
+      p.nombre.toLowerCase().includes(q) ||
+      p.desc.toLowerCase().includes(q)
+    );
+  }
+
+  document.getElementById('prod-count').textContent = `${filtered.length} producto${filtered.length !== 1 ? 's' : ''}`;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="col-span-full flex flex-col items-center justify-center py-16 text-center fade-in">
+        <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4" style="background:#f5ede0;">
+          <i data-lucide="search-x" class="w-7 h-7" style="color:#e8d9c4;"></i>
+        </div>
+        <p class="serif text-lg font-medium mb-1" style="color:#2e1f0e;">Sin resultados</p>
+        <p class="text-sm" style="color:#7a5c2e;">Probá con otra búsqueda o <button onclick="limpiarBusqueda()" class="underline" style="color:#2d5a27;">limpiá el filtro</button></p>
+      </div>`;
+    lucide.createIcons();
+    return;
+  }
+
+  grid.innerHTML = filtered.map((p, i) => `
+    <div class="product-card bg-white rounded-3xl overflow-hidden border fade-up"
+         style="border-color:#e8d9c4;animation-delay:${i*0.07}s;">
+      <!-- Imagen placeholder -->
+      <div class="prod-img h-44 w-full relative">
+        <span class="text-5xl relative z-10">${p.emoji}</span>
+        ${p.tag ? `<span class="card-badge absolute top-3 left-3 text-xs font-medium px-2.5 py-1 rounded-full z-10"
+          style="background:${p.tagColor || '#2d5a27'}18;color:${p.tagColor || '#2d5a27'};border:1px solid ${p.tagColor || '#2d5a27'}30;">
+          ${p.tag}</span>` : ''}
+      </div>
+
+      <!-- Info -->
+      <div class="p-4">
+        <span class="organic-tag">Agroecológico</span>
+        <h3 class="serif font-semibold text-base mt-2 mb-1 leading-snug" style="color:#2e1f0e;">${p.nombre}</h3>
+        <p class="text-xs leading-relaxed mb-3" style="color:#7a5c2e;">${p.desc}</p>
+
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="serif text-xl font-bold" style="color:#2d5a27;">$${p.precio.toLocaleString('es-AR')}</p>
+            <p class="text-xs" style="color:#7a5c2e;">por ${p.unidad}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            ${cart[p.id] ? `
+              <button class="qty-btn" onclick="cambiarCantidad(${p.id}, -1)">−</button>
+              <span class="text-sm font-semibold w-5 text-center" id="qty-${p.id}" style="color:#2e1f0e;">${cart[p.id]}</span>
+              <button class="qty-btn" onclick="cambiarCantidad(${p.id}, 1)">+</button>
+            ` : `
+              <button onclick="agregarAlCarrito(${p.id})"
+                class="btn-verde flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                Agregar
+              </button>
+            `}
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  lucide.createIcons();
+}
+
+function filterCat(cat, btn) {
+  catActiva = cat;
+  document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(cat);
+}
+
+function buscarProductos(valor) {
+  terminoBusqueda = valor.trim();
+  const clearBtn = document.getElementById('search-clear');
+  if (clearBtn) clearBtn.classList.toggle('hidden', !terminoBusqueda);
+  renderProducts(catActiva);
+}
+
+function limpiarBusqueda() {
+  terminoBusqueda = '';
+  const input = document.getElementById('search-input');
+  const clearBtn = document.getElementById('search-clear');
+  if (input) input.value = '';
+  if (clearBtn) clearBtn.classList.add('hidden');
+  renderProducts(catActiva);
+}
+
+// ─── CARRITO ─────────────────────────────────
+function mostrarToast(msg) {
+  const t = document.getElementById('toast');
+  const m = document.getElementById('toast-msg');
+  if (!t) return;
+  m.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function agregarAlCarrito(id) {
+  cart[id] = (cart[id] || 0) + 1;
+  guardarStorage();
+  actualizarBadge();
+  actualizarCarritoUI();
+  renderProducts(catActiva);
+  bumpBadge();
+  const p = PRODUCTOS.find(pr => pr.id == id);
+  if (p) mostrarToast(p.emoji + ' ' + p.nombre.split(' —')[0] + ' agregado');
+}
+
+function cambiarCantidad(id, delta) {
+  cart[id] = (cart[id] || 0) + delta;
+  if (cart[id] <= 0) delete cart[id];
+  guardarStorage();
+  actualizarBadge();
+  actualizarCarritoUI();
+  renderProducts(catActiva);
+}
+
+function actualizarBadge() {
+  const total = Object.values(cart).reduce((a, b) => a + b, 0);
+  const badge = document.getElementById('cart-count-badge');
+  badge.textContent = total;
+  badge.classList.toggle('hidden', total === 0);
+}
+
+function bumpBadge() {
+  const badge = document.getElementById('cart-count-badge');
+  badge.classList.remove('bump');
+  void badge.offsetWidth;
+  badge.classList.add('bump');
+}
+
+function toggleCart() {
+  const sidebar = document.getElementById('cart-sidebar');
+  const overlay = document.getElementById('cart-overlay');
+  const isOpen  = sidebar.classList.contains('open');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('hidden', isOpen);
+  if (!isOpen) actualizarCarritoUI();
+}
+
+function actualizarCarritoUI() {
+  const items    = document.getElementById('cart-items');
+  const empty    = document.getElementById('cart-empty');
+  const footer   = document.getElementById('cart-footer');
+  const subtotalEl = document.getElementById('cart-subtotal');
+  const envioEl  = document.getElementById('cart-envio');
+  const totalEl  = document.getElementById('cart-total');
+
+  const ids = Object.keys(cart).filter(id => cart[id] > 0);
+
+  if (ids.length === 0) {
+    items.classList.add('hidden');
+    empty.classList.remove('hidden');
+    footer.classList.add('hidden');
+    return;
+  }
+
+  items.classList.remove('hidden');
+  empty.classList.add('hidden');
+  footer.classList.remove('hidden');
+
+  let subtotal = 0;
+  items.innerHTML = ids.map(id => {
+    const p   = PRODUCTOS.find(pr => pr.id == id);
+    const sub = p.precio * cart[id];
+    subtotal += sub;
+    return `
+      <div class="flex items-center gap-3 py-3 border-b" style="border-color:#f5ede0;">
+        <div class="w-12 h-12 rounded-xl prod-img flex-shrink-0 text-2xl">${p.emoji}</div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium leading-tight truncate" style="color:#2e1f0e;">${p.nombre}</p>
+          <p class="text-xs mt-0.5" style="color:#7a5c2e;">$${p.precio.toLocaleString('es-AR')} × ${cart[id]}</p>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button class="qty-btn" onclick="cambiarCantidad(${id}, -1)" style="width:24px;height:24px;font-size:.9rem;">−</button>
+          <span class="text-sm font-semibold w-4 text-center" style="color:#2e1f0e;">${cart[id]}</span>
+          <button class="qty-btn" onclick="cambiarCantidad(${id}, 1)" style="width:24px;height:24px;font-size:.9rem;">+</button>
+        </div>
+        <p class="text-sm font-semibold w-20 text-right" style="color:#2d5a27;">$${sub.toLocaleString('es-AR')}</p>
+      </div>
+    `;
+  }).join('');
+  lucide.createIcons();
+
+  // Costo de envío
+  let costoEnvio = 0;
+  let envioTexto = 'Gratis (retiro)';
+  if (delivMode === 'envio' && delivData.localidad) {
+    costoEnvio = COSTOS_ENVIO[delivData.localidad] || 0;
+    envioTexto = `$${costoEnvio.toLocaleString('es-AR')}`;
+  } else if (!delivMode) {
+    envioTexto = 'Seleccioná entrega';
+  }
+
+  subtotalEl.textContent = `$${subtotal.toLocaleString('es-AR')}`;
+  envioEl.textContent    = envioTexto;
+  totalEl.textContent    = `$${(subtotal + costoEnvio).toLocaleString('es-AR')}`;
+}
+
+// ─── CHECKOUT ────────────────────────────────
+let pagoSeleccionado = null;
+
+function abrirCheckout() {
+  const ids = Object.keys(cart).filter(id => cart[id] > 0);
+  if (ids.length === 0) {
+    mostrarToast('🛒 Agregá al menos un producto primero');
+    return;
+  }
+
+  // Poblar resumen
+  let subtotal = 0;
+  const lista = document.getElementById('checkout-items-list');
+  lista.innerHTML = ids.map(id => {
+    const p   = PRODUCTOS.find(pr => pr.id == id);
+    const sub = p.precio * cart[id];
+    subtotal += sub;
+    return `<div class="flex justify-between" style="color:#2e1f0e;">
+      <span>${p.emoji} ${p.nombre} ×${cart[id]}</span>
+      <span class="font-medium">$${sub.toLocaleString('es-AR')}</span>
+    </div>`;
+  }).join('');
+
+  let costoEnvio = 0;
+  let envioTexto = 'Gratis (retiro)';
+  if (delivMode === 'envio' && delivData.localidad) {
+    costoEnvio = COSTOS_ENVIO[delivData.localidad] || 0;
+    envioTexto = `$${costoEnvio.toLocaleString('es-AR')}`;
+  }
+  document.getElementById('co-envio').textContent = envioTexto;
+  document.getElementById('co-total').textContent  = `$${(subtotal + costoEnvio).toLocaleString('es-AR')}`;
+
+  // Dirección
+  const dirBox  = document.getElementById('co-direccion-box');
+  const dirText = document.getElementById('co-direccion-text');
+  if (delivMode === 'retiro') {
+    dirText.textContent = '🏪 Retiro por nodo (coordinamos por WhatsApp)';
+  } else if (delivMode === 'envio' && delivData.localidad) {
+    dirText.textContent = `🚚 Envío a: ${delivData.calle} ${delivData.numero}${delivData.piso ? ` ${delivData.piso}` : ''}, ${delivData.localidad}`;
+  } else {
+    dirText.textContent = '⚠️ Sin entrega seleccionada — volvé atrás y elegí';
+  }
+
+  // Reset pago
+  pagoSeleccionado = null;
+  ['mercadopago','transferencia','modo','efectivo'].forEach(m => {
+    document.getElementById(`pago-${m}`).classList.remove('selected');
+    const info = document.getElementById(`info-${m}`);
+    if (info) info.style.display = 'none';
+  });
+  document.getElementById('err-pago').classList.add('hidden');
+  document.getElementById('co-nota').value = '';
+
+  const overlay = document.getElementById('checkout-overlay');
+  overlay.classList.remove('hidden');
+  overlay.classList.add('flex');
+  lucide.createIcons();
+
+  // Cerrar sidebar
+  document.getElementById('cart-sidebar').classList.remove('open');
+  document.getElementById('cart-overlay').classList.add('hidden');
+}
+
+function cerrarCheckout() {
+  const overlay = document.getElementById('checkout-overlay');
+  overlay.classList.add('hidden');
+  overlay.classList.remove('flex');
+}
+
+function seleccionarPago(metodo) {
+  pagoSeleccionado = metodo;
+  ['mercadopago','transferencia','modo','efectivo'].forEach(m => {
+    document.getElementById(`pago-${m}`).classList.toggle('selected', m === metodo);
+    const info = document.getElementById(`info-${m}`);
+    if (info) info.style.display = m === metodo ? 'block' : 'none';
+  });
+  document.getElementById('err-pago').classList.add('hidden');
+}
+
+function confirmarCheckout() {
+  if (!pagoSeleccionado) {
+    document.getElementById('err-pago').classList.remove('hidden');
+    return;
+  }
+  enviarWhatsApp();
+}
+
+// ─── WHATSAPP ────────────────────────────────
+function enviarWhatsApp() {
+  const ids = Object.keys(cart).filter(id => cart[id] > 0);
+  if (ids.length === 0) {
+    mostrarToast('🛒 Agregá al menos un producto primero');
+    document.getElementById('productos').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+
+  const LABELS_PAGO = {
+    mercadopago:  '💳 Mercado Pago (link de pago)',
+    transferencia:'🏦 Transferencia bancaria',
+    modo:         '📱 MODO',
+    efectivo:     '💵 Efectivo al recibir',
+  };
+
+  let msg = '🌿 *Hola! Quiero hacer un pedido en UTT Nodo Morón*\n\n';
+
+  msg += '*📦 Productos:*\n';
+  let subtotal = 0;
+  ids.forEach(id => {
+    const p   = PRODUCTOS.find(pr => pr.id == id);
+    const sub = p.precio * cart[id];
+    subtotal += sub;
+    msg += `• ${p.nombre} ×${cart[id]} — $${sub.toLocaleString('es-AR')}\n`;
+  });
+
+  msg += `\n*💰 Subtotal: $${subtotal.toLocaleString('es-AR')}*\n`;
+
+  let costoEnvio = 0;
+  if (delivMode === 'retiro') {
+    msg += '\n🏪 *Entrega:* Retiro por nodo\n';
+  } else if (delivMode === 'envio' && delivData.localidad) {
+    costoEnvio = COSTOS_ENVIO[delivData.localidad] || 0;
+    msg += '\n🚚 *Entrega:* Envío a domicilio\n';
+    msg += `📍 *Dirección:* ${delivData.calle} ${delivData.numero}`;
+    if (delivData.piso) msg += ` ${delivData.piso}`;
+    msg += `, ${delivData.localidad}\n`;
+    msg += `🛵 *Costo envío:* $${costoEnvio.toLocaleString('es-AR')}\n`;
+  }
+
+  msg += `\n💰 *TOTAL: $${(subtotal + costoEnvio).toLocaleString('es-AR')}*\n`;
+
+  if (pagoSeleccionado) {
+    msg += `\n💳 *Método de pago:* ${LABELS_PAGO[pagoSeleccionado]}\n`;
+  }
+
+  const nota = document.getElementById('co-nota')?.value?.trim();
+  if (nota) msg += `\n📝 *Nota:* ${nota}\n`;
+
+  msg += '\n¡Muchas gracias! 🙏';
+
+  const phone = '5491168044276';
+  const url   = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+
+  // Mostrar success
+  cerrarCheckout();
+  const successLabels = {
+    mercadopago:  '💳 Te enviamos un link de Mercado Pago por WhatsApp para completar el pago.',
+    transferencia:'🏦 Recordá enviarnos el comprobante de transferencia por WhatsApp.',
+    modo:         '📱 Podés pagar con MODO al alias UTT.NODO.MORON y enviarnos el comprobante.',
+    efectivo:     '💵 Pagás en efectivo cuando recibas o retires tu pedido.',
+  };
+  document.getElementById('success-pago-text').textContent =
+    successLabels[pagoSeleccionado] || '';
+  const sov = document.getElementById('success-overlay');
+  sov.classList.remove('hidden');
+  sov.classList.add('flex');
+  lucide.createIcons();
+}
+
+function cerrarSuccess() {
+  const sov = document.getElementById('success-overlay');
+  sov.classList.add('hidden');
+  sov.classList.remove('flex');
+  // Limpiar carrito
+  cart = {};
+  guardarStorage();
+  actualizarBadge();
+  renderProducts(catActiva);
+}
+
+
+// ─── MENÚ CATEGORÍAS NAVBAR ──────────
+let catMenuOpen = false;
+
+function toggleCatMenu() {
+  catMenuOpen = !catMenuOpen;
+  const dd = document.getElementById('cat-dropdown');
+  const ch = document.getElementById('cat-chevron');
+  dd.classList.toggle('open', catMenuOpen);
+  ch.style.transform = catMenuOpen ? 'rotate(180deg)' : '';
+}
+
+function selectCatFromMenu(cat, label, el) {
+  document.querySelectorAll('.cat-pill').forEach(b => {
+    b.classList.remove('active');
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + cat + "'")) {
+      b.classList.add('active');
+    }
+  });
+  catActiva = cat;
+  terminoBusqueda = '';
+  const input = document.getElementById('search-input');
+  const clearBtn = document.getElementById('search-clear');
+  if (input) input.value = '';
+  if (clearBtn) clearBtn.classList.add('hidden');
+  document.getElementById('cat-menu-label').textContent = label === 'Todos' ? 'Categorías' : label;
+  document.querySelectorAll('#cat-dropdown .dd-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  catMenuOpen = false;
+  document.getElementById('cat-dropdown').classList.remove('open');
+  document.getElementById('cat-chevron').style.transform = '';
+  renderProducts(cat);
+  document.getElementById('productos').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+document.addEventListener('click', e => {
+  const wrapper = document.getElementById('cat-menu-wrapper');
+  if (wrapper && !wrapper.contains(e.target)) {
+    catMenuOpen = false;
+    const dd = document.getElementById('cat-dropdown');
+    if (dd) dd.classList.remove('open');
+    const ch = document.getElementById('cat-chevron');
+    if (ch) ch.style.transform = '';
+  }
+});
+
+// ─── FAQ ACCORDION ───────────────
+function toggleFaq(btn) {
+  const body = btn.nextElementSibling;
+  const isOpen = btn.getAttribute('aria-expanded') === 'true';
+  document.querySelectorAll('.faq-btn').forEach(b => {
+    b.setAttribute('aria-expanded', 'false');
+    b.nextElementSibling.classList.remove('open');
+  });
+  if (!isOpen) {
+    btn.setAttribute('aria-expanded', 'true');
+    body.classList.add('open');
+  }
+}
+
+// ─── SCROLL REVEAL ─────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.fade-up').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(22px)';
+  el.style.transition = 'opacity .55s ease, transform .55s ease';
+  observer.observe(el);
+});
+
+</script>
 </body>
 </html>
